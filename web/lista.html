@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu lista de precios | Montes Chaqueños</title>
+<meta name="description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#3E4E38">
+<link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Montes Chaqueños">
+<meta property="og:title" content="Tu lista de precios | Montes Chaqueños">
+<meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header class="header-simple">
+  <a href="index.html" class="logo">
+    <img src="../assets/logo.jpg" alt="Logo Montes Chaqueños">
+    <span>Montes Chaqueños</span>
+  </a>
+  <a href="index.html" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Volver al inicio</a>
+</header>
+
+<section class="cat-hero">
+  <h1>Tu lista de precios</h1>
+  <p id="saludo">Cargando los precios…</p>
+</section>
+
+<div class="cat-barra">
+  <div class="cat-barra-in">
+    <input class="buscador" id="buscador" type="search" placeholder="Buscar producto (ej: arándano, miel, pan)" aria-label="Buscar producto">
+    <nav class="chips" id="chips" aria-label="Secciones"></nav>
+  </div>
+</div>
+
+<main class="cat">
+<div id="secciones"></div>
+<div class="lista-estado" id="estado"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Cargando los precios…</div>
+<p class="vacio" id="vacio">No encontramos productos con esa búsqueda. Escribinos por WhatsApp y te lo conseguimos.</p>
+<p class="nota-precios" id="nota" hidden></p>
+</main>
+
+<div class="barra-pedido" id="barra">
+  <div class="resumen" id="resumen"></div>
+  <div class="acciones">
+    <button type="button" class="btn-vaciar" id="vaciar">Vaciar</button>
+    <a class="btn-wsp" id="enviar" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Enviar pedido</a>
+  </div>
+</div>
+
+<script>
+(function () {
+  var WSP = '5491153472956';
+  var FUNCION = 'https://kvobkqaujufugdyxxovb.supabase.co/functions/v1/catalogo';
+  var FOTOS = {"6003":"fotos/6003.jpg","6004":"fotos/6004.jpg","6005":"fotos/6005.jpg","6006":"fotos/6006.jpg","6007":"fotos/6007.jpg","6017":"fotos/6017.jpg","6018":"fotos/6018.jpg","6047":"fotos/6047.jpg","6050":"fotos/6050.jpg","6055":"fotos/6055.jpg","6301":"fotos/6301.jpg","6302":"fotos/6302.jpg","MMLV":"fotos/MMLV.jpg","MML500":"fotos/MML500.jpg"};
+  var SECCIONES = {"10":{"icono":"fa-egg","desc":"Seleccionados y envasados por nosotros, con fecha en cada envase."},"20":{"icono":"fa-bread-slice","desc":"Panificados artesanales, de producción directa."},"30":{"icono":"fa-jar","desc":"Mieles de Morrens y otros productos de la colmena."},"40":{"icono":"fa-jar","desc":"Mieles orgánicas y mermeladas sin azúcar agregada."},"50":{"icono":"fa-mountain","desc":"Confituras, mermeladas dietéticas y jugos de la Patagonia."},"60":{"icono":"fa-leaf","desc":"Propóleo, caramelos y jalea real."}};
+  var cliente = '';
+  var cantidades = {};
+  var productos = [];
+
+  function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function slug(t) { return String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function pesos(n) { return '$ ' + Math.round(n).toLocaleString('es-AR'); }
+  function subgrupo(p) {
+    if (p.orden !== 50) return '';
+    if (/^confitura/i.test(p.nombre)) return 'Confituras · 450 g';
+    if (/^mermelada diet/i.test(p.nombre)) return 'Mermeladas dietéticas · 380 g';
+    if (/^jugo/i.test(p.nombre)) return 'Jugos de arándano sin azúcar';
+    return '';
+  }
+  
+function activarBuscador() {
+  var buscador = document.getElementById('buscador');
+  function norm(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+  buscador.addEventListener('input', function () {
+    var q = norm(buscador.value.trim()), visibles = 0;
+    Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
+      var ok = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.nombre).indexOf(q) !== -1;
+      t.style.display = ok ? '' : 'none';
+      if (ok) visibles++;
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.cat-seccion'), function (s) {
+      var hay = Array.prototype.some.call(s.querySelectorAll('.prod-card'), function (t) { return t.style.display !== 'none'; });
+      s.style.display = hay ? '' : 'none';
+    });
+    document.getElementById('vacio').style.display = visibles ? 'none' : 'block';
+  });
+}
+
+  function estado(html) {
+    var e = document.getElementById('estado');
+    e.innerHTML = html;
+    e.style.display = html ? 'block' : 'none';
+  }
+
+  function tarjeta(p) {
+    var info = SECCIONES[p.orden];
+    var media = FOTOS[p.cod]
+      ? '<img src="' + esc(FOTOS[p.cod]) + '" alt="' + esc(p.nombre) + '" loading="lazy">'
+      : '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>';
+    return '<article class="prod-card" data-cod="' + esc(p.cod) + '" data-nombre="' + esc(p.nombre) + '" data-busca="' + esc(slug(p.nombre)) + '">' +
+      '<div class="prod-foto' + (FOTOS[p.cod] ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
+      '<div class="prod-nombre">' + esc(p.nombre) + '</div>' +
+      '<div class="prod-precio">' + pesos(p.precio) + '</div>' +
+      '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button><span class="cant" aria-live="polite">0</span><button type="button" data-d="1" aria-label="Agregar uno">+</button></div>' +
+      '</div></article>';
+  }
+
+  function dibujar() {
+    var ordenes = [], grupos = {};
+    productos.forEach(function (p) {
+      if (!SECCIONES[p.orden]) return;
+      if (!grupos[p.orden]) { grupos[p.orden] = []; ordenes.push(p.orden); }
+      grupos[p.orden].push(p);
+    });
+    ordenes.sort(function (a, b) { return a - b; });
+    var html = '', chips = '';
+    ordenes.forEach(function (o) {
+      var items = grupos[o], titulo = items[0].seccion, id = slug(titulo), cuerpo = '', subs = [];
+      items.forEach(function (p) {
+        var g = subgrupo(p), s = subs.filter(function (x) { return x.g === g; })[0];
+        if (!s) { s = { g: g, items: [] }; subs.push(s); }
+        s.items.push(p);
+      });
+      subs.forEach(function (s) {
+        if (s.g) cuerpo += '<h3 class="cat-sub">' + esc(s.g) + '</h3>';
+        cuerpo += '<div class="cat-grid">' + s.items.map(tarjeta).join('') + '</div>';
+      });
+      chips += '<a class="chip" href="#' + id + '">' + esc(titulo) + '</a>';
+      html += '<section class="cat-seccion" id="' + id + '"><h2><i class="fa-solid ' + SECCIONES[o].icono + '" aria-hidden="true"></i>' + esc(titulo) + '</h2>' +
+        '<p>' + esc(SECCIONES[o].desc) + '</p>' + cuerpo + '</section>';
+    });
+    document.getElementById('secciones').innerHTML = html;
+    document.getElementById('chips').innerHTML = chips;
+  }
+
+  function pintar() {
+    var unidades = 0, lineas = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
+      var c = cantidades[t.dataset.cod] || 0;
+      t.querySelector('.cant').textContent = c;
+      t.classList.toggle('en-pedido', c > 0);
+      if (c > 0) { unidades += c; lineas.push('- ' + c + ' x ' + t.dataset.nombre + ' (cód. ' + t.dataset.cod + ')'); }
+    });
+    var barra = document.getElementById('barra');
+    barra.classList.toggle('visible', unidades > 0);
+    document.getElementById('resumen').textContent = unidades + (unidades === 1 ? ' producto' : ' productos') + ' en tu pedido';
+    var texto = 'Hola Víctor! ' + (cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n');
+    document.getElementById('enviar').href = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent(texto);
+  }
+
+  document.querySelector('main').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-d]');
+    if (!b) return;
+    var cod = b.closest('.prod-card').dataset.cod;
+    cantidades[cod] = Math.max(0, (cantidades[cod] || 0) + Number(b.dataset.d));
+    pintar();
+  });
+  document.getElementById('vaciar').addEventListener('click', function () { cantidades = {}; pintar(); });
+
+  var pedirLink = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent('Hola Víctor! Mi link de la lista de precios no funciona, ¿me pasás uno nuevo?');
+  var token = new URLSearchParams(location.search).get('c') || '';
+  if (!/^[A-Za-z0-9_-]{24,64}$/.test(token)) {
+    document.getElementById('saludo').textContent = 'Este link no es válido.';
+    estado('Para ver la lista de precios necesitás el link que te mandamos. <a href="' + pedirLink + '" target="_blank" rel="noopener">Pedilo por WhatsApp</a>.');
+    return;
+  }
+  fetch(FUNCION + '?c=' + encodeURIComponent(token))
+    .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+    .then(function (res) {
+      if (!res.ok) {
+        document.getElementById('saludo').textContent = 'Este link ya no está activo.';
+        estado('Pedinos uno nuevo por <a href="' + pedirLink + '" target="_blank" rel="noopener">WhatsApp</a> y te lo mandamos.');
+        return;
+      }
+      cliente = res.d.cliente || '';
+      productos = res.d.productos || [];
+      document.getElementById('saludo').textContent = (cliente ? 'Hola, ' + cliente + '. ' : '') + 'Sumá lo que necesitás y mandanos el pedido por WhatsApp.';
+      var nota = document.getElementById('nota');
+      var f = res.d.actualizado ? res.d.actualizado.split('-').reverse().join('/') : null;
+      nota.textContent = 'Precios en pesos argentinos' + (f ? ', actualizados al ' + f : '') + '. Esta lista es solo para vos: por favor no la compartas.';
+      nota.hidden = false;
+      estado('');
+      dibujar();
+      activarBuscador();
+      pintar();
+    })
+    .catch(function () {
+      document.getElementById('saludo').textContent = 'No pudimos cargar los precios.';
+      estado('Revisá la conexión y volvé a abrir el link. Si sigue sin andar, escribinos por <a href="' + pedirLink + '" target="_blank" rel="noopener">WhatsApp</a>.');
+    });
+})();
+</script>
+</body>
+</html>
