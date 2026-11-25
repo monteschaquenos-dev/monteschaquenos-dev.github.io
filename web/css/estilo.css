@@ -158,7 +158,13 @@ body.escribiendo .barra-pedido{display:none}
 .revisar[hidden]{display:none}
 .revisar-caja{background:var(--white);width:100%;max-width:520px;max-height:85vh;overflow:auto;border-radius:16px 16px 0 0;padding:1.3rem 5% 1.5rem;display:flex;flex-direction:column;gap:.8rem}
 .revisar-caja h2{font-size:1.3rem;color:var(--dark);margin:0}
-.revisar-caja ul{margin:0;padding-left:1.1rem;color:var(--dark);font-size:.95rem;line-height:1.5}
+.revisar-cliente{margin:-.4rem 0 0;color:#6b6457;font-size:.85rem}
+.revisar-tabla{width:100%;border-collapse:collapse;font-size:.9rem;color:var(--dark)}
+.revisar-tabla th{text-align:left;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.03em;color:#6b6457;border-bottom:2px solid #e3ddd0;padding:.35rem .3rem}
+.revisar-tabla td{padding:.5rem .3rem;border-bottom:1px solid #eee8dc;vertical-align:top}
+.revisar-tabla th:not(:first-child),.revisar-tabla td:not(:first-child){text-align:right;white-space:nowrap}
+.revisar-tabla tfoot td{font-weight:700;font-size:1.05rem;border-bottom:0;padding-top:.7rem}
+.revisar-nota{margin:0;color:#6b6457;font-size:.8rem}
 .revisar-caja .btn-wsp{justify-content:center;font-size:1.05rem;padding:.9rem}
 .btn-seguir{background:none;border:2px solid var(--primary);color:var(--primary);padding:.75rem;border-radius:5px;font:inherit;font-weight:600;cursor:pointer}
 

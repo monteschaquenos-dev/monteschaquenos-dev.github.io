@@ -15,7 +15,7 @@
 <meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css">
+<link rel="stylesheet" href="css/estilo.css?v=20261124b">
 </head>
 <body>
 
@@ -58,7 +58,13 @@
 <div class="revisar" id="revisar" hidden>
   <div class="revisar-caja" role="dialog" aria-modal="true" aria-labelledby="revisar-titulo">
     <h2 id="revisar-titulo">Revisá tu pedido</h2>
-    <ul id="revisar-lista"></ul>
+    <p class="revisar-cliente" id="revisar-cliente"></p>
+    <table class="revisar-tabla">
+      <thead><tr><th>Producto</th><th>Precio</th><th>Subtotal</th></tr></thead>
+      <tbody id="revisar-lista"></tbody>
+      <tfoot><tr><td colspan="2">Total</td><td id="revisar-total"></td></tr></tfoot>
+    </table>
+    <p class="revisar-nota">Precios de hoy. Si algún producto no está disponible, te avisamos antes de entregar.</p>
     <a class="btn-wsp" id="mandar" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Mandar por WhatsApp</a>
     <button type="button" class="btn-seguir" id="seguir">Seguir agregando</button>
   </div>
@@ -117,7 +123,7 @@ function activarBuscador() {
     var media = FOTOS[p.cod]
       ? '<img src="' + esc(FOTOS[p.cod]) + '" alt="' + esc(p.nombre) + '" loading="lazy">'
       : '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>';
-    return '<article class="prod-card" data-cod="' + esc(p.cod) + '" data-nombre="' + esc(p.nombre) + '" data-busca="' + esc(slug(p.nombre)) + '">' +
+    return '<article class="prod-card" data-cod="' + esc(p.cod) + '" data-nombre="' + esc(p.nombre) + '" data-precio="' + (Number(p.precio) || 0) + '" data-busca="' + esc(slug(p.nombre)) + '">' +
       '<div class="prod-foto' + (FOTOS[p.cod] ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
       '<div class="prod-nombre">' + esc(p.nombre) + '</div>' +
       '<div class="prod-precio">' + pesos(p.precio) + '</div>' +
@@ -159,21 +165,30 @@ function activarBuscador() {
   }
 
   function pintar() {
-    var unidades = 0, lineas = [];
+    var unidades = 0, lineas = [], filas = [], total = 0;
     Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
       var c = cantidades[t.dataset.cod] || 0;
       var campo = t.querySelector('.cant');
       // El casillero que se está escribiendo no se pisa (si no, se borraría la coma a medio escribir)
       if (campo !== document.activeElement) campo.value = c > 0 ? numero(c) : '';
       t.classList.toggle('en-pedido', c > 0);
-      if (c > 0) { unidades += 1; lineas.push('- ' + numero(c) + ' x ' + t.dataset.nombre + ' (cód. ' + t.dataset.cod + ')'); }
+      if (c > 0) {
+        var precio = Number(t.dataset.precio) || 0, sub = precio * c;
+        unidades += 1; total += sub;
+        lineas.push('- ' + numero(c) + ' x ' + t.dataset.nombre + ' (cód. ' + t.dataset.cod + ')' + (precio ? ' · ' + pesos(precio) + ' c/u = ' + pesos(sub) : ''));
+        filas.push('<tr><td><b>' + numero(c) + ' x</b> ' + esc(t.dataset.nombre) + '</td><td>' + (precio ? pesos(precio) : '—') + '</td><td>' + (precio ? pesos(sub) : '—') + '</td></tr>');
+      }
     });
     var barra = document.getElementById('barra');
     barra.classList.toggle('visible', unidades > 0);
-    document.getElementById('resumen').textContent = unidades + (unidades === 1 ? ' producto' : ' productos') + ' en tu pedido';
-    var texto = 'Hola Víctor! ' + (cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n');
+    document.getElementById('resumen').textContent = unidades + (unidades === 1 ? ' producto' : ' productos') + ' · ' + pesos(total);
+    // El pedido como una orden de compra (24/11, Víctor): cantidad, producto, precio, subtotal y total, en la pantalla y en el WhatsApp
+    var texto = 'Hola Víctor! ' + (cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n') +
+      (total ? '\n\nTotal aproximado: ' + pesos(total) : '');
     document.getElementById('mandar').href = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent(texto);
-    document.getElementById('revisar-lista').innerHTML = lineas.map(function (l) { return '<li>' + esc(l.replace(/^- /, '')) + '</li>'; }).join('');
+    document.getElementById('revisar-lista').innerHTML = filas.join('');
+    document.getElementById('revisar-total').textContent = pesos(total);
+    document.getElementById('revisar-cliente').textContent = (cliente ? cliente + ' · ' : '') + new Date().toLocaleDateString('es-AR');
     if (barra.classList.contains('visible') && !barraDesde) barraDesde = Date.now();
     if (!barra.classList.contains('visible')) barraDesde = 0;
   }
