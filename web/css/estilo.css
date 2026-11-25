@@ -140,7 +140,9 @@ a.logo{text-decoration:none}
 .prod-ctrl{display:flex;align-items:center;gap:.6rem}
 .prod-ctrl button{width:36px;height:36px;border-radius:50%;border:2px solid var(--primary);background:var(--white);color:var(--primary);font-size:1.2rem;font-weight:700;cursor:pointer;line-height:1}
 .prod-ctrl button:hover{background:var(--primary);color:var(--white)}
-.prod-ctrl .cant{min-width:28px;text-align:center;font-weight:600;color:var(--dark)}
+.prod-ctrl .cant{width:56px;height:36px;text-align:center;font:inherit;font-weight:600;font-size:1rem;color:var(--dark);border:2px solid #d8d2c4;border-radius:10px;background:var(--white);padding:0 .25rem}
+.prod-ctrl .cant:focus{outline:none;border-color:var(--primary)}
+.prod-ctrl .cant::placeholder{color:#b9b2a3}
 .prod-card.en-pedido{outline:3px solid var(--secondary)}
 .vacio{display:none;text-align:center;padding:3rem 0}
 .nota-precios{font-size:.85rem;text-align:center;margin-top:2.5rem}

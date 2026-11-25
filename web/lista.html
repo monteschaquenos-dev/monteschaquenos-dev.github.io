@@ -99,6 +99,9 @@ function activarBuscador() {
     e.style.display = html ? 'block' : 'none';
   }
 
+  function porPeso(nombre) { return /por kg|por kilo|fraccionad|suelt[oa].*kg/i.test(nombre || ''); }
+  function numero(n) { return String(Math.round(n * 1000) / 1000).replace('.', ','); }
+
   function tarjeta(p) {
     var info = SECCIONES[p.orden];
     var media = FOTOS[p.cod]
@@ -108,7 +111,12 @@ function activarBuscador() {
       '<div class="prod-foto' + (FOTOS[p.cod] ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
       '<div class="prod-nombre">' + esc(p.nombre) + '</div>' +
       '<div class="prod-precio">' + pesos(p.precio) + '</div>' +
-      '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button><span class="cant" aria-live="polite">0</span><button type="button" data-d="1" aria-label="Agregar uno">+</button></div>' +
+      // La cantidad se escribe con el teclado numérico del teléfono (24/11, Víctor: "sin tener que ir sumando de a uno");
+      // lo que se vende por kilo trae la coma (0,5 kg de cera)
+      '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button>' +
+      '<input class="cant" type="text" inputmode="' + (porPeso(p.nombre) ? 'decimal' : 'numeric') + '"' + (porPeso(p.nombre) ? '' : ' pattern="[0-9]*"') +
+      ' value="" placeholder="0" autocomplete="off" aria-label="Cantidad de ' + esc(p.nombre) + '">' +
+      '<button type="button" data-d="1" aria-label="Agregar uno">+</button></div>' +
       '</div></article>';
   }
 
@@ -144,9 +152,11 @@ function activarBuscador() {
     var unidades = 0, lineas = [];
     Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
       var c = cantidades[t.dataset.cod] || 0;
-      t.querySelector('.cant').textContent = c;
+      var campo = t.querySelector('.cant');
+      // El casillero que se está escribiendo no se pisa (si no, se borraría la coma a medio escribir)
+      if (campo !== document.activeElement) campo.value = c > 0 ? numero(c) : '';
       t.classList.toggle('en-pedido', c > 0);
-      if (c > 0) { unidades += c; lineas.push('- ' + c + ' x ' + t.dataset.nombre + ' (cód. ' + t.dataset.cod + ')'); }
+      if (c > 0) { unidades += 1; lineas.push('- ' + numero(c) + ' x ' + t.dataset.nombre + ' (cód. ' + t.dataset.cod + ')'); }
     });
     var barra = document.getElementById('barra');
     barra.classList.toggle('visible', unidades > 0);
@@ -162,6 +172,20 @@ function activarBuscador() {
     cantidades[cod] = Math.max(0, (cantidades[cod] || 0) + Number(b.dataset.d));
     pintar();
   });
+  // Lo que se escribe en el casillero
+  document.querySelector('main').addEventListener('input', function (e) {
+    var campo = e.target.closest('input.cant');
+    if (!campo) return;
+    var limpio = campo.value.replace(/[^0-9.,]/g, '');
+    if (limpio !== campo.value) campo.value = limpio;
+    var n = Number(limpio.replace(',', '.'));
+    cantidades[campo.closest('.prod-card').dataset.cod] = isFinite(n) && n > 0 ? n : 0;
+    pintar();
+  });
+  // Al salir del casillero queda prolijo (o vacío si era 0)
+  document.querySelector('main').addEventListener('focusout', function (e) { if (e.target.closest('input.cant')) setTimeout(pintar, 0); });
+  // Al tocarlo se selecciona lo que había, así se escribe el número nuevo directo
+  document.querySelector('main').addEventListener('focusin', function (e) { var c = e.target.closest('input.cant'); if (c) setTimeout(function () { c.select(); }, 0); });
   document.getElementById('vaciar').addEventListener('click', function () { cantidades = {}; pintar(); });
 
   var pedirLink = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent('Hola Víctor! Mi link de la lista de precios no funciona, ¿me pasás uno nuevo?');
