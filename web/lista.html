@@ -15,7 +15,7 @@
 <meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css?v=20261124b">
+<link rel="stylesheet" href="css/estilo.css?v=20261125a">
 </head>
 <body>
 
@@ -97,7 +97,7 @@ function activarBuscador() {
   buscador.addEventListener('input', function () {
     var q = norm(buscador.value.trim()), visibles = 0;
     Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
-      var ok = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.nombre).indexOf(q) !== -1;
+      var ok = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.todos).indexOf(q) !== -1;
       t.style.display = ok ? '' : 'none';
       if (ok) visibles++;
     });
@@ -118,21 +118,63 @@ function activarBuscador() {
   function porPeso(nombre) { return /por kg|por kilo|fraccionad|suelt[oa].*kg/i.test(nombre || ''); }
   function numero(n) { return String(Math.round(n * 1000) / 1000).replace('.', ','); }
 
-  function tarjeta(p) {
-    var info = SECCIONES[p.orden];
-    var media = FOTOS[p.cod]
-      ? '<img src="' + esc(FOTOS[p.cod]) + '" alt="' + esc(p.nombre) + '" loading="lazy">'
+  // Presentaciones de un mismo producto en una sola tarjeta (25/11): "Morrens Miel Cremosa Vidrio 250 / 500 / 900 Gr"
+  // se ve como "Morrens Miel Cremosa Vidrio" con un desplegable para elegir el tamaño. Se agrupan solos: productos de la
+  // misma sección cuyo nombre es igual salvo el tamaño del final.
+  var TAMANO = /\s+(\d+(?:[.,]\d+)?\s*(?:gr|grs|g|kg|cc|ml|litros?|lts?|l|c[aá]psulas)\b.*)$/i;
+  function partir(nombre) {
+    var m = String(nombre).match(TAMANO);
+    return m ? { base: nombre.slice(0, m.index).trim(), pres: m[1].trim() } : { base: nombre, pres: '' };
+  }
+  function tamanoEnGramos(pres) {
+    var m = String(pres).match(/(\d+(?:[.,]\d+)?)\s*(kg|litros?|lts?|l|gr|grs|g|cc|ml)?/i);
+    if (!m) return 0;
+    var n = Number(m[1].replace(',', '.'));
+    return /^(kg|litros?|lts?|l)$/i.test(m[2] || '') ? n * 1000 : n;
+  }
+  // [{ base, variantes: [p...] }] en el orden de la lista; una tarjeta por elemento
+  function agrupar(items) {
+    var porBase = {}, salida = [];
+    items.forEach(function (p) {
+      var x = partir(p.nombre), clave = x.pres ? slug(x.base) : 'solo-' + p.cod;
+      if (!porBase[clave]) { porBase[clave] = { base: x.base, variantes: [] }; salida.push(porBase[clave]); }
+      porBase[clave].variantes.push({ p: p, pres: x.pres });
+    });
+    return salida.map(function (g) {
+      if (g.variantes.length < 2) return { base: g.variantes[0].p.nombre, variantes: [{ p: g.variantes[0].p, pres: '' }] };
+      g.variantes.sort(function (a, b) { return tamanoEnGramos(a.pres) - tamanoEnGramos(b.pres); });
+      return g;
+    });
+  }
+  var grupoDe = {}; // cod -> grupo (para saber qué tarjeta muestra cada producto)
+
+  function tarjeta(g) {
+    var p = g.variantes[0].p, info = SECCIONES[p.orden], varias = g.variantes.length > 1;
+    g.variantes.forEach(function (v) { grupoDe[v.p.cod] = g; });
+    var foto = g.variantes.map(function (v) { return FOTOS[v.p.cod]; }).filter(Boolean)[0];
+    var media = foto
+      ? '<img src="' + esc(foto) + '" alt="' + esc(g.base) + '" loading="lazy">'
       : '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>';
-    return '<article class="prod-card" data-cod="' + esc(p.cod) + '" data-nombre="' + esc(p.nombre) + '" data-precio="' + (Number(p.precio) || 0) + '" data-busca="' + esc(slug(p.nombre)) + '">' +
-      '<div class="prod-foto' + (FOTOS[p.cod] ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
-      '<div class="prod-nombre">' + esc(p.nombre) + '</div>' +
-      '<div class="prod-precio">' + pesos(p.precio) + '</div>' +
+    var nombres = g.variantes.map(function (v) { return v.p.nombre; }).join(' ');
+    var precios = g.variantes.map(function (v) { return v.p.precio; });
+    var desde = Math.min.apply(null, precios), igual = precios.every(function (x) { return x === desde; });
+    var selector = varias
+      ? '<label class="prod-var"><span class="sr-only">Presentación</span><select class="variante" aria-label="Presentación de ' + esc(g.base) + '">' +
+        g.variantes.map(function (v) { return '<option value="' + esc(v.p.cod) + '">' + esc(v.pres) + ' · ' + pesos(v.p.precio) + '</option>'; }).join('') +
+        '</select></label>'
+      : '';
+    return '<article class="prod-card' + (varias ? ' con-variantes' : '') + '" data-cod="' + esc(p.cod) + '" data-nombre="' + esc(p.nombre) + '" data-precio="' + (Number(p.precio) || 0) +
+      '" data-busca="' + esc(slug(nombres)) + '" data-todos="' + esc(nombres) + '">' +
+      '<div class="prod-foto' + (foto ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
+      '<div class="prod-nombre">' + esc(g.base) + '</div>' +
+      '<div class="prod-precio">' + (varias && !igual ? '<small>desde</small> ' : '') + pesos(varias ? desde : p.precio) + '</div>' + selector +
       // La cantidad se escribe con el teclado numérico del teléfono (24/11, Víctor: "sin tener que ir sumando de a uno");
       // lo que se vende por kilo trae la coma (0,5 kg de cera)
       '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button>' +
       '<input class="cant" type="text" inputmode="' + (porPeso(p.nombre) ? 'decimal' : 'numeric') + '"' + (porPeso(p.nombre) ? '' : ' pattern="[0-9]*"') +
       ' value="" placeholder="0" autocomplete="off" enterkeyhint="done" aria-label="Cantidad de ' + esc(p.nombre) + '">' +
       '<button type="button" data-d="1" aria-label="Agregar uno">+</button></div>' +
+      (varias ? '<div class="prod-lleva" aria-live="polite"></div>' : '') +
       '</div></article>';
   }
 
@@ -154,7 +196,7 @@ function activarBuscador() {
       });
       subs.forEach(function (s) {
         if (s.g) cuerpo += '<h3 class="cat-sub">' + esc(s.g) + '</h3>';
-        cuerpo += '<div class="cat-grid">' + s.items.map(tarjeta).join('') + '</div>';
+        cuerpo += '<div class="cat-grid">' + agrupar(s.items).map(tarjeta).join('') + '</div>';
       });
       chips += '<a class="chip" href="#' + id + '">' + esc(titulo) + '</a>';
       html += '<section class="cat-seccion" id="' + id + '"><h2><i class="fa-solid ' + SECCIONES[o].icono + '" aria-hidden="true"></i>' + esc(titulo) + '</h2>' +
@@ -171,13 +213,21 @@ function activarBuscador() {
       var campo = t.querySelector('.cant');
       // El casillero que se está escribiendo no se pisa (si no, se borraría la coma a medio escribir)
       if (campo !== document.activeElement) campo.value = c > 0 ? numero(c) : '';
-      t.classList.toggle('en-pedido', c > 0);
-      if (c > 0) {
-        var precio = Number(t.dataset.precio) || 0, sub = precio * c;
-        unidades += 1; total += sub;
-        lineas.push('- ' + numero(c) + ' x ' + t.dataset.nombre + ' (cód. ' + t.dataset.cod + ')' + (precio ? ' · ' + pesos(precio) + ' c/u = ' + pesos(sub) : ''));
-        filas.push('<tr><td><b>' + numero(c) + ' x</b> ' + esc(t.dataset.nombre) + '</td><td>' + (precio ? pesos(precio) : '—') + '</td><td>' + (precio ? pesos(sub) : '—') + '</td></tr>');
+      var g = grupoDe[t.dataset.cod], lleva = [];
+      if (g && g.variantes.length > 1) {
+        g.variantes.forEach(function (v) { var n = cantidades[v.p.cod] || 0; if (n > 0) lleva.push(numero(n) + ' × ' + v.pres); });
+        t.querySelector('.prod-lleva').textContent = lleva.length ? 'En tu pedido: ' + lleva.join(' · ') : '';
       }
+      t.classList.toggle('en-pedido', c > 0 || lleva.length > 0);
+    });
+    // El pedido, en el orden de la lista (una línea por presentación)
+    productos.forEach(function (p) {
+      var c = cantidades[p.cod] || 0;
+      if (!(c > 0)) return;
+      var precio = Number(p.precio) || 0, sub = precio * c;
+      unidades += 1; total += sub;
+      lineas.push('- ' + numero(c) + ' x ' + p.nombre + ' (cód. ' + p.cod + ')' + (precio ? ' · ' + pesos(precio) + ' c/u = ' + pesos(sub) : ''));
+      filas.push('<tr><td><b>' + numero(c) + ' x</b> ' + esc(p.nombre) + '</td><td>' + (precio ? pesos(precio) : '—') + '</td><td>' + (precio ? pesos(sub) : '—') + '</td></tr>');
     });
     var barra = document.getElementById('barra');
     barra.classList.toggle('visible', unidades > 0);
@@ -198,6 +248,20 @@ function activarBuscador() {
     if (!b) return;
     var cod = b.closest('.prod-card').dataset.cod;
     cantidades[cod] = Math.max(0, (cantidades[cod] || 0) + Number(b.dataset.d));
+    pintar();
+  });
+  // Otra presentación en el desplegable: la tarjeta pasa a mostrar esa (precio y cantidad propios)
+  document.querySelector('main').addEventListener('change', function (e) {
+    var sel = e.target.closest('select.variante');
+    if (!sel) return;
+    var t = sel.closest('.prod-card'), g = grupoDe[sel.value];
+    var v = g.variantes.filter(function (x) { return x.p.cod === sel.value; })[0];
+    t.dataset.cod = v.p.cod; t.dataset.nombre = v.p.nombre; t.dataset.precio = Number(v.p.precio) || 0;
+    t.querySelector('.prod-precio').textContent = pesos(v.p.precio);
+    var campo = t.querySelector('.cant');
+    campo.setAttribute('aria-label', 'Cantidad de ' + v.p.nombre);
+    var f = FOTOS[v.p.cod], img = t.querySelector('.prod-foto img');
+    if (f && img) img.src = f;
     pintar();
   });
   // Lo que se escribe en el casillero
