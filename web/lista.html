@@ -125,7 +125,7 @@ function activarBuscador() {
       // lo que se vende por kilo trae la coma (0,5 kg de cera)
       '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button>' +
       '<input class="cant" type="text" inputmode="' + (porPeso(p.nombre) ? 'decimal' : 'numeric') + '"' + (porPeso(p.nombre) ? '' : ' pattern="[0-9]*"') +
-      ' value="" placeholder="0" autocomplete="off" aria-label="Cantidad de ' + esc(p.nombre) + '">' +
+      ' value="" placeholder="0" autocomplete="off" enterkeyhint="done" aria-label="Cantidad de ' + esc(p.nombre) + '">' +
       '<button type="button" data-d="1" aria-label="Agregar uno">+</button></div>' +
       '</div></article>';
   }
@@ -208,9 +208,23 @@ function activarBuscador() {
   });
   document.getElementById('seguir').addEventListener('click', function () { revisar.hidden = true; });
   revisar.addEventListener('click', function (e) { if (e.target === revisar) revisar.hidden = true; });
-  // Con el teclado abierto (escribiendo una cantidad) la barra se esconde, así no tapa los productos
-  document.querySelector('main').addEventListener('focusin', function (e) { if (e.target.closest('input.cant')) document.body.classList.add('escribiendo'); });
-  document.querySelector('main').addEventListener('focusout', function (e) { if (e.target.closest('input.cant')) document.body.classList.remove('escribiendo'); });
+  // Con el teclado del teléfono abierto la barra se esconde, así no tapa los productos; cuando el teclado se cierra
+  // (aunque el casillero siga seleccionado, como al cerrar con "atrás") vuelve a aparecer con Enviar pedido.
+  // El teclado abierto se nota porque la parte visible de la pantalla se achica.
+  var altoLleno = window.innerHeight;
+  function revisarTeclado() {
+    var vv = window.visualViewport;
+    var alto = vv ? vv.height : window.innerHeight;
+    if (alto > altoLleno) altoLleno = alto;
+    var campo = document.activeElement && document.activeElement.matches && document.activeElement.matches('input.cant');
+    document.body.classList.toggle('escribiendo', !!campo && alto < altoLleno * 0.8);
+  }
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', revisarTeclado);
+  window.addEventListener('resize', revisarTeclado);
+  document.querySelector('main').addEventListener('focusin', function () { setTimeout(revisarTeclado, 350); });
+  document.querySelector('main').addEventListener('focusout', function () { setTimeout(revisarTeclado, 50); });
+  // "Listo" en el teclado (Enter) cierra el teclado y deja ver la barra
+  document.querySelector('main').addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.closest('input.cant')) e.target.blur(); });
 
   var pedirLink = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent('Hola Víctor! Mi link de la lista de precios no funciona, ¿me pasás uno nuevo?');
   var token = new URLSearchParams(location.search).get('c') || '';
