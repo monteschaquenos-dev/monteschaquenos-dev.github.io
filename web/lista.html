@@ -50,7 +50,17 @@
   <div class="resumen" id="resumen"></div>
   <div class="acciones">
     <button type="button" class="btn-vaciar" id="vaciar">Vaciar</button>
-    <a class="btn-wsp" id="enviar" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Enviar pedido</a>
+    <button type="button" class="btn-wsp" id="enviar"><i class="fa-brands fa-whatsapp"></i> Enviar pedido</button>
+  </div>
+</div>
+
+<!-- Antes de mandar: el pedido para revisar (24/11: un toque sin querer en la barra mandaba el pedido) -->
+<div class="revisar" id="revisar" hidden>
+  <div class="revisar-caja" role="dialog" aria-modal="true" aria-labelledby="revisar-titulo">
+    <h2 id="revisar-titulo">Revisá tu pedido</h2>
+    <ul id="revisar-lista"></ul>
+    <a class="btn-wsp" id="mandar" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Mandar por WhatsApp</a>
+    <button type="button" class="btn-seguir" id="seguir">Seguir agregando</button>
   </div>
 </div>
 
@@ -162,7 +172,10 @@ function activarBuscador() {
     barra.classList.toggle('visible', unidades > 0);
     document.getElementById('resumen').textContent = unidades + (unidades === 1 ? ' producto' : ' productos') + ' en tu pedido';
     var texto = 'Hola Víctor! ' + (cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n');
-    document.getElementById('enviar').href = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent(texto);
+    document.getElementById('mandar').href = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent(texto);
+    document.getElementById('revisar-lista').innerHTML = lineas.map(function (l) { return '<li>' + esc(l.replace(/^- /, '')) + '</li>'; }).join('');
+    if (barra.classList.contains('visible') && !barraDesde) barraDesde = Date.now();
+    if (!barra.classList.contains('visible')) barraDesde = 0;
   }
 
   document.querySelector('main').addEventListener('click', function (e) {
@@ -187,6 +200,17 @@ function activarBuscador() {
   // Al tocarlo se selecciona lo que había, así se escribe el número nuevo directo
   document.querySelector('main').addEventListener('focusin', function (e) { var c = e.target.closest('input.cant'); if (c) setTimeout(function () { c.select(); }, 0); });
   document.getElementById('vaciar').addEventListener('click', function () { cantidades = {}; pintar(); });
+  // Enviar pedido → primero se revisa. Un toque que llega justo cuando la barra aparece (el dedo iba al + de abajo) no cuenta.
+  var barraDesde = 0, revisar = document.getElementById('revisar');
+  document.getElementById('enviar').addEventListener('click', function () {
+    if (barraDesde && Date.now() - barraDesde < 700) return;
+    revisar.hidden = false;
+  });
+  document.getElementById('seguir').addEventListener('click', function () { revisar.hidden = true; });
+  revisar.addEventListener('click', function (e) { if (e.target === revisar) revisar.hidden = true; });
+  // Con el teclado abierto (escribiendo una cantidad) la barra se esconde, así no tapa los productos
+  document.querySelector('main').addEventListener('focusin', function (e) { if (e.target.closest('input.cant')) document.body.classList.add('escribiendo'); });
+  document.querySelector('main').addEventListener('focusout', function (e) { if (e.target.closest('input.cant')) document.body.classList.remove('escribiendo'); });
 
   var pedirLink = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent('Hola Víctor! Mi link de la lista de precios no funciona, ¿me pasás uno nuevo?');
   var token = new URLSearchParams(location.search).get('c') || '';
