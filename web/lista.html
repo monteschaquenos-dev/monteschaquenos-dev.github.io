@@ -423,7 +423,7 @@ function activarBuscador() {
       document.getElementById('saludo').textContent = (cliente ? 'Hola, ' + cliente + '. ' : '') + 'Sumá lo que necesitás y mandanos el pedido por WhatsApp.';
       var nota = document.getElementById('nota');
       var f = res.d.actualizado ? res.d.actualizado.split('-').reverse().join('/') : null;
-      nota.textContent = 'Precios en pesos argentinos' + (f ? ', actualizados al ' + f : '') + '. Esta lista es solo para vos: por favor no la compartas.';
+      nota.textContent = 'Precios en pesos argentinos' + (f ? ', actualizados al ' + f : '') + '.';
       nota.hidden = false;
       estado('');
       dibujar();
