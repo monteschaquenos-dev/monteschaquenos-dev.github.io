@@ -214,3 +214,10 @@ body.escribiendo .barra-pedido{display:none}
 .marca-tit .sem-etiqueta{display:table}
 .prod-cambio{font-size:.76rem;font-weight:600;margin:-.1rem 0 .35rem}
 .prod-cambio.sube{color:#b3302c}.prod-cambio.baja{color:#1f7a44}
+
+.sem-filtro{font:inherit;font-size:.85rem;font-weight:600;color:var(--dark);background:#fff;border:1px solid #d9d1c1;border-radius:20px;padding:.4rem .8rem;display:inline-flex;align-items:center;gap:.35rem;cursor:pointer}
+.sem-filtro .sem-dot{margin-left:0}
+.sem-filtro.activo{background:var(--primary);color:#fff;border-color:var(--primary)}
+.sem-ref{display:inline-flex;align-items:center;gap:.35rem;font-size:.85rem;margin-left:.2rem}
+.sem-ref .sem-dot{margin-left:0}
+.sem-leyenda small{flex-basis:100%;margin-top:.1rem}
