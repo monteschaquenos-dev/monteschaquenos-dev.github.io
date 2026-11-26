@@ -182,14 +182,19 @@ body.escribiendo .barra-pedido{display:none}
 .lista-estado{text-align:center;padding:3rem 1rem;font-size:1.05rem;color:var(--dark)}
 .lista-estado a{color:var(--primary);font-weight:600}
 
-/* Más marcas: índice y marcas desplegables (26/11) */
-.marcas-indice{display:flex;flex-wrap:wrap;gap:.45rem;margin:.8rem 0 1.4rem}
-.marca-btn{text-decoration:none;font-size:.88rem;font-weight:600;color:var(--dark);background:#fff;border:1px solid #e3ddd0;padding:.4rem .75rem;border-radius:20px}
-.marca-btn small{color:#8a8273;font-weight:500;margin-left:.15rem}
-.marca{border-top:1px solid #eee8dc;scroll-margin-top:200px}
-.marca summary{cursor:pointer;padding:.9rem .2rem;font-weight:700;font-size:1.02rem;color:var(--dark);list-style:none;display:flex;justify-content:space-between;align-items:center}
+/* La lista como índice de títulos que se abren (26/11) */
+.marca{background:#fff;border:1px solid #e9e3d6;border-radius:12px;margin:.55rem 0;scroll-margin-top:140px}
+.marca summary{cursor:pointer;padding:.85rem 1rem;display:flex;align-items:center;gap:.75rem;list-style:none;color:var(--dark)}
 .marca summary::-webkit-details-marker{display:none}
-.marca summary::after{content:'+';font-size:1.3rem;color:var(--primary);margin-left:.6rem}
+.marca summary::after{content:'+';font-size:1.4rem;line-height:1;color:var(--primary);font-weight:600}
 .marca[open] summary::after{content:'−'}
-.marca summary small{font-weight:500;color:#8a8273;font-size:.8rem;margin-left:auto}
-.marca-cuerpo{padding-bottom:1rem}
+.marca[open] summary{border-bottom:1px solid #eee8dc}
+.marca-tit{flex:1;font-weight:700;font-size:1rem}
+.marca-tit small{display:block;font-weight:400;font-size:.8rem;color:#6b6457;margin-top:.15rem}
+.marca-cant{font-size:.78rem;color:#8a8273;white-space:nowrap}
+.marca.propia{border-color:var(--secondary,#c8963e);border-width:1.5px}
+.marca.propia summary>i{font-size:1.25rem;color:var(--primary);width:1.6rem;text-align:center}
+.marca.propia .marca-tit{font-size:1.08rem}
+.marca-cuerpo{padding:.4rem .8rem 1rem}
+.marca:has(.en-pedido) .marca-cant{color:var(--primary);font-weight:700}
+.chips:empty{display:none}

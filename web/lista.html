@@ -15,7 +15,7 @@
 <meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css?v=20261126a">
+<link rel="stylesheet" href="css/estilo.css?v=20261126b">
 </head>
 <body>
 
@@ -97,8 +97,6 @@ function activarBuscador() {
   buscador.addEventListener('input', function () {
     var q = norm(buscador.value.trim()), visibles = 0;
     // Las marcas: con 2 letras o más se abren las que tienen algo que coincide (y se dibujan si hacía falta)
-    var indice = document.querySelector('.marcas-indice');
-    if (indice) indice.style.display = q ? 'none' : '';
     Array.prototype.forEach.call(document.querySelectorAll('details.marca'), function (d) {
       var m = marcas[d.dataset.orden];
       if (!q) {
@@ -198,61 +196,54 @@ function activarBuscador() {
       '</div></article>';
   }
 
+  // La lista es un índice de títulos que se tocan para abrir (26/11, Víctor: "si solo tenemos títulos con botones, de
+  // manera inevitable ve todas las marcas"). Primero los productos directos (huevos, Peregrino, miel...), después las
+  // demás marcas en orden alfabético. Los productos de cada una se dibujan recién cuando se abre.
+  var marcas = {};
+  function cuerpoDe(items) {
+    var subs = [], html = '';
+    items.forEach(function (p) {
+      var g = subgrupo(p), s = subs.filter(function (x) { return x.g === g; })[0];
+      if (!s) { s = { g: g, items: [] }; subs.push(s); }
+      s.items.push(p);
+    });
+    subs.forEach(function (s) {
+      if (s.g) html += '<h3 class="cat-sub">' + esc(s.g) + '</h3>';
+      html += '<div class="cat-grid">' + agrupar(s.items).map(tarjeta).join('') + '</div>';
+    });
+    return html;
+  }
+  function titulo(o) {
+    var m = marcas[o], info = SECCIONES[o], n = m.items.length;
+    return '<details class="marca' + (info ? ' propia' : '') + '" id="marca-' + o + '" data-orden="' + o + '"><summary>' +
+      (info ? '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>' : '') +
+      '<span class="marca-tit">' + esc(m.nombre) + (info ? '<small>' + esc(info.desc) + '</small>' : '') + '</span>' +
+      '<span class="marca-cant">' + n + (n === 1 ? ' producto' : ' productos') + '</span></summary><div class="marca-cuerpo"></div></details>';
+  }
   function dibujar() {
-    var ordenes = [], grupos = {};
+    marcas = {};
+    var propias = [], otras = [];
     productos.forEach(function (p) {
-      if (!SECCIONES[p.orden]) return;
-      if (!grupos[p.orden]) { grupos[p.orden] = []; ordenes.push(p.orden); }
-      grupos[p.orden].push(p);
-    });
-    ordenes.sort(function (a, b) { return a - b; });
-    var html = '', chips = '';
-    ordenes.forEach(function (o) {
-      var items = grupos[o], titulo = items[0].seccion, id = slug(titulo), cuerpo = '', subs = [];
-      items.forEach(function (p) {
-        var g = subgrupo(p), s = subs.filter(function (x) { return x.g === g; })[0];
-        if (!s) { s = { g: g, items: [] }; subs.push(s); }
-        s.items.push(p);
-      });
-      subs.forEach(function (s) {
-        if (s.g) cuerpo += '<h3 class="cat-sub">' + esc(s.g) + '</h3>';
-        cuerpo += '<div class="cat-grid">' + agrupar(s.items).map(tarjeta).join('') + '</div>';
-      });
-      chips += '<a class="chip" href="#' + id + '">' + esc(titulo) + '</a>';
-      html += '<section class="cat-seccion" id="' + id + '"><h2><i class="fa-solid ' + SECCIONES[o].icono + '" aria-hidden="true"></i>' + esc(titulo) + '</h2>' +
-        '<p>' + esc(SECCIONES[o].desc) + '</p>' + cuerpo + '</section>';
-    });
-    // Más marcas (26/11, Víctor: que sepan todo lo que tenemos, como el índice de marcas de la primera hoja del PDF).
-    // Primero un índice de marcas; los productos de cada marca se dibujan recién cuando se abre (son más de mil).
-    marcas = {}; ordenMarcas = [];
-    productos.forEach(function (p) {
-      if (SECCIONES[p.orden]) return;
-      if (!marcas[p.orden]) { marcas[p.orden] = { nombre: p.seccion, items: [], dibujada: false }; ordenMarcas.push(p.orden); }
+      if (!marcas[p.orden]) { marcas[p.orden] = { nombre: p.seccion, items: [], dibujada: false }; (SECCIONES[p.orden] ? propias : otras).push(p.orden); }
       marcas[p.orden].items.push(p);
     });
-    ordenMarcas.sort(function (a, b) { return String(marcas[a].nombre).localeCompare(String(marcas[b].nombre), 'es'); });
-    if (ordenMarcas.length) {
-      chips += '<a class="chip chip-mas" href="#mas-marcas">Más marcas</a>';
+    propias.sort(function (a, b) { return a - b; });
+    otras.sort(function (a, b) { return String(marcas[a].nombre).localeCompare(String(marcas[b].nombre), 'es'); });
+    var html = '<section class="cat-seccion" id="nuestros"><h2><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Nuestros productos</h2>' +
+      '<p>Directo de los productores. Tocá cada uno para ver los productos y precios.</p>' + propias.map(titulo).join('') + '</section>';
+    if (otras.length) {
       html += '<section class="cat-seccion mas-marcas" id="mas-marcas"><h2><i class="fa-solid fa-store" aria-hidden="true"></i>Más marcas</h2>' +
-        '<p>También trabajamos con todas estas marcas. Tocá una para ver sus productos y precios, o buscá lo que necesitás arriba.</p>' +
-        '<div class="marcas-indice">' + ordenMarcas.map(function (o) {
-          return '<a class="marca-btn" href="#marca-' + o + '" data-orden="' + o + '">' + esc(marcas[o].nombre) + ' <small>' + marcas[o].items.length + '</small></a>';
-        }).join('') + '</div>' +
-        ordenMarcas.map(function (o) {
-          return '<details class="marca" id="marca-' + o + '" data-orden="' + o + '"><summary>' + esc(marcas[o].nombre) +
-            ' <small>' + marcas[o].items.length + ' productos</small></summary><div class="marca-cuerpo"></div></details>';
-        }).join('') + '</section>';
+        '<p>También trabajamos con todas estas marcas. Tocá una para ver sus productos, o buscá lo que necesitás arriba.</p>' +
+        otras.map(titulo).join('') + '</section>';
     }
     document.getElementById('secciones').innerHTML = html;
-    document.getElementById('chips').innerHTML = chips;
+    document.getElementById('chips').innerHTML = '';
   }
-  var marcas = {}, ordenMarcas = [];
   function dibujarMarca(o) {
     var m = marcas[o];
     if (!m || m.dibujada) return;
     m.dibujada = true;
-    var d = document.getElementById('marca-' + o);
-    d.querySelector('.marca-cuerpo').innerHTML = '<div class="cat-grid">' + agrupar(m.items).map(tarjeta).join('') + '</div>';
+    document.getElementById('marca-' + o).querySelector('.marca-cuerpo').innerHTML = cuerpoDe(m.items);
     pintar();
   }
 
@@ -297,12 +288,6 @@ function activarBuscador() {
     if (e.target.matches && e.target.matches('details.marca') && e.target.open) dibujarMarca(e.target.dataset.orden);
   }, true);
   document.querySelector('main').addEventListener('click', function (e) {
-    var mb = e.target.closest('a.marca-btn');
-    if (mb) {
-      var d = document.getElementById('marca-' + mb.dataset.orden);
-      dibujarMarca(mb.dataset.orden);
-      d.open = true;
-    }
     var b = e.target.closest('button[data-d]');
     if (!b) return;
     var cod = b.closest('.prod-card').dataset.cod;
