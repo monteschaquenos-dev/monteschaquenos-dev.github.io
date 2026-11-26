@@ -15,7 +15,7 @@
 <meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css?v=20261126b">
+<link rel="stylesheet" href="css/estilo.css?v=20261126c">
 </head>
 <body>
 
@@ -166,6 +166,14 @@ function activarBuscador() {
   }
   var grupoDe = {}; // cod -> grupo (para saber qué tarjeta muestra cada producto)
 
+  // "▲ antes $ 4.100" debajo del precio, si alguna presentación cambió de precio en los últimos 30 días
+  function cambioDe(g) {
+    var c = g.variantes.filter(function (v) { return v.p.antes; })[0];
+    if (!c) return '';
+    var sube = c.p.precio > c.p.antes;
+    return '<div class="prod-cambio ' + (sube ? 'sube' : 'baja') + '">' + (sube ? '▲' : '▼') + ' antes ' + pesos(c.p.antes) +
+      (g.variantes.length > 1 ? ' (' + esc(c.pres) + ')' : '') + '</div>';
+  }
   function tarjeta(g) {
     var p = g.variantes[0].p, info = SECCIONES[p.orden] || { icono: 'fa-basket-shopping' }, varias = g.variantes.length > 1;
     g.variantes.forEach(function (v) { grupoDe[v.p.cod] = g; });
@@ -185,7 +193,8 @@ function activarBuscador() {
       '" data-busca="' + esc(slug(nombres)) + '" data-todos="' + esc(nombres) + '">' +
       '<div class="prod-foto' + (foto ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
       '<div class="prod-nombre">' + esc(g.base) + '</div>' +
-      '<div class="prod-precio">' + (varias && !igual ? '<small>desde</small> ' : '') + pesos(varias ? desde : p.precio) + '</div>' + selector +
+      '<div class="prod-precio">' + (varias && !igual ? '<small>desde</small> ' : '') + pesos(varias ? desde : p.precio) + '</div>' +
+      cambioDe(g) + selector +
       // La cantidad se escribe con el teclado numérico del teléfono (24/11, Víctor: "sin tener que ir sumando de a uno");
       // lo que se vende por kilo trae la coma (0,5 kg de cera)
       '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button>' +
@@ -213,11 +222,21 @@ function activarBuscador() {
     });
     return html;
   }
+  // Semáforo de precios (26/11, Víctor): cada marca pintada según si sus precios subieron, bajaron o siguen igual
+  // en los últimos 30 días (la función manda "antes" con el precio anterior solo si cambió en ese tiempo).
+  function semaforo(items) {
+    var sube = items.filter(function (p) { return p.antes && p.precio > p.antes; }).length;
+    var baja = items.filter(function (p) { return p.antes && p.precio < p.antes; }).length;
+    if (sube) return { clase: 'sube', texto: '▲ Subió' + (sube < items.length ? ' (' + sube + ')' : '') };
+    if (baja) return { clase: 'baja', texto: '▼ Bajó' + (baja < items.length ? ' (' + baja + ')' : '') };
+    return { clase: 'igual', texto: '● Sin cambios' };
+  }
   function titulo(o) {
-    var m = marcas[o], info = SECCIONES[o], n = m.items.length;
-    return '<details class="marca' + (info ? ' propia' : '') + '" id="marca-' + o + '" data-orden="' + o + '"><summary>' +
+    var m = marcas[o], info = SECCIONES[o], n = m.items.length, sem = semaforo(m.items);
+    return '<details class="marca sem-' + sem.clase + (info ? ' propia' : '') + '" id="marca-' + o + '" data-orden="' + o + '"><summary>' +
       (info ? '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>' : '') +
-      '<span class="marca-tit">' + esc(m.nombre) + (info ? '<small>' + esc(info.desc) + '</small>' : '') + '</span>' +
+      '<span class="marca-tit">' + esc(m.nombre) + (info ? '<small>' + esc(info.desc) + '</small>' : '') +
+      '<span class="sem-etiqueta">' + sem.texto + '</span></span>' +
       '<span class="marca-cant">' + n + (n === 1 ? ' producto' : ' productos') + '</span></summary><div class="marca-cuerpo"></div></details>';
   }
   function dibujar() {
@@ -229,7 +248,9 @@ function activarBuscador() {
     });
     propias.sort(function (a, b) { return a - b; });
     otras.sort(function (a, b) { return String(marcas[a].nombre).localeCompare(String(marcas[b].nombre), 'es'); });
-    var html = '<section class="cat-seccion" id="nuestros"><h2><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Nuestros productos</h2>' +
+    var html = '<div class="sem-leyenda" aria-label="Referencias de precios"><span class="sem-dot sube"></span>Subió ' +
+      '<span class="sem-dot baja"></span>Bajó <span class="sem-dot igual"></span>Sin cambios <small>(últimos 30 días)</small></div>' +
+      '<section class="cat-seccion" id="nuestros"><h2><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Nuestros productos</h2>' +
       '<p>Directo de los productores. Tocá cada uno para ver los productos y precios.</p>' + propias.map(titulo).join('') + '</section>';
     if (otras.length) {
       html += '<section class="cat-seccion mas-marcas" id="mas-marcas"><h2><i class="fa-solid fa-store" aria-hidden="true"></i>Más marcas</h2>' +

@@ -198,3 +198,19 @@ body.escribiendo .barra-pedido{display:none}
 .marca-cuerpo{padding:.4rem .8rem 1rem}
 .marca:has(.en-pedido) .marca-cant{color:var(--primary);font-weight:700}
 .chips:empty{display:none}
+
+/* Semáforo de precios (26/11) */
+.sem-leyenda{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .5rem;font-size:.82rem;color:#6b6457;margin:1rem 0 .2rem}
+.sem-leyenda small{font-size:.75rem}
+.sem-dot{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;margin-left:.35rem}
+.sem-dot.sube{background:#d64541}.sem-dot.baja{background:#2e9e5b}.sem-dot.igual{background:#e0a800}
+.marca.sem-sube{border-left:7px solid #d64541}
+.marca.sem-baja{border-left:7px solid #2e9e5b}
+.marca.sem-igual{border-left:7px solid #e0a800}
+.sem-etiqueta{display:inline-block;margin-top:.3rem;font-size:.72rem;font-weight:700;padding:.12rem .5rem;border-radius:10px}
+.sem-sube .sem-etiqueta{background:#fbe3e2;color:#b3302c}
+.sem-baja .sem-etiqueta{background:#e1f4e8;color:#1f7a44}
+.sem-igual .sem-etiqueta{background:#fdf3d6;color:#8a6a00}
+.marca-tit .sem-etiqueta{display:table}
+.prod-cambio{font-size:.76rem;font-weight:600;margin:-.1rem 0 .35rem}
+.prod-cambio.sube{color:#b3302c}.prod-cambio.baja{color:#1f7a44}
