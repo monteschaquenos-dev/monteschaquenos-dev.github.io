@@ -238,6 +238,9 @@ function activarBuscador() {
     }
     document.getElementById('secciones').innerHTML = html;
     document.getElementById('chips').innerHTML = '';
+    // Los huevos, lo que más se vende, ya abiertos (26/11)
+    var huevos = document.getElementById('marca-10');
+    if (huevos) { huevos.open = true; dibujarMarca('10'); }
   }
   function dibujarMarca(o) {
     var m = marcas[o];
