@@ -222,8 +222,8 @@ function activarBuscador() {
     });
     return html;
   }
-  // Semáforo de precios (26/11, Víctor): cada marca pintada según si sus precios subieron, bajaron o siguen igual
-  // en los últimos 30 días (la función manda "antes" con el precio anterior solo si cambió en ese tiempo).
+  // Semáforo de precios (26/11, Víctor): cada marca pintada según si sus precios subieron, bajaron o siguieron igual
+  // con su última lista (la función manda "antes" con el precio anterior; vale hasta que llega la lista siguiente).
   function semaforo(items) {
     var sube = items.filter(function (p) { return p.antes && p.precio > p.antes; }).length;
     var baja = items.filter(function (p) { return p.antes && p.precio < p.antes; }).length;
@@ -249,7 +249,7 @@ function activarBuscador() {
     propias.sort(function (a, b) { return a - b; });
     otras.sort(function (a, b) { return String(marcas[a].nombre).localeCompare(String(marcas[b].nombre), 'es'); });
     var html = '<div class="sem-leyenda" aria-label="Referencias de precios"><span class="sem-dot sube"></span>Subió ' +
-      '<span class="sem-dot baja"></span>Bajó <span class="sem-dot igual"></span>Sin cambios <small>(últimos 30 días)</small></div>' +
+      '<span class="sem-dot baja"></span>Bajó <span class="sem-dot igual"></span>Sin cambios <small>(con la última lista de cada marca)</small></div>' +
       '<section class="cat-seccion" id="nuestros"><h2><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Nuestros productos</h2>' +
       '<p>Directo de los productores. Tocá cada uno para ver los productos y precios.</p>' + propias.map(titulo).join('') + '</section>';
     if (otras.length) {
