@@ -15,7 +15,7 @@
 <meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css?v=20261125a">
+<link rel="stylesheet" href="css/estilo.css?v=20261126a">
 </head>
 <body>
 
@@ -96,14 +96,34 @@ function activarBuscador() {
   function norm(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
   buscador.addEventListener('input', function () {
     var q = norm(buscador.value.trim()), visibles = 0;
+    // Las marcas: con 2 letras o más se abren las que tienen algo que coincide (y se dibujan si hacía falta)
+    var indice = document.querySelector('.marcas-indice');
+    if (indice) indice.style.display = q ? 'none' : '';
+    Array.prototype.forEach.call(document.querySelectorAll('details.marca'), function (d) {
+      var m = marcas[d.dataset.orden];
+      if (!q) {
+        d.style.display = '';
+        if (d.dataset.porBusqueda) { d.open = false; delete d.dataset.porBusqueda; }
+        return;
+      }
+      var hay = q.length >= 2 && (norm(m.nombre).indexOf(q) !== -1 || m.items.some(function (p) { return norm(p.nombre).indexOf(q) !== -1; }));
+      if (hay) {
+        dibujarMarca(d.dataset.orden);
+        if (!d.open) { d.open = true; d.dataset.porBusqueda = '1'; }
+      }
+      d.style.display = hay ? '' : 'none';
+      d.dataset.marcaCoincide = norm(m.nombre).indexOf(q) !== -1 ? '1' : '';
+    });
     Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
-      var ok = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.todos).indexOf(q) !== -1;
+      var marca = t.closest('details.marca');
+      var ok = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.todos).indexOf(q) !== -1 ||
+        (marca && marca.dataset.marcaCoincide === '1'); // "tucangua" muestra todo lo de esa marca
       t.style.display = ok ? '' : 'none';
       if (ok) visibles++;
     });
     Array.prototype.forEach.call(document.querySelectorAll('.cat-seccion'), function (s) {
       var hay = Array.prototype.some.call(s.querySelectorAll('.prod-card'), function (t) { return t.style.display !== 'none'; });
-      s.style.display = hay ? '' : 'none';
+      s.style.display = !q || hay ? '' : 'none';
     });
     document.getElementById('vacio').style.display = visibles ? 'none' : 'block';
   });
@@ -149,7 +169,7 @@ function activarBuscador() {
   var grupoDe = {}; // cod -> grupo (para saber qué tarjeta muestra cada producto)
 
   function tarjeta(g) {
-    var p = g.variantes[0].p, info = SECCIONES[p.orden], varias = g.variantes.length > 1;
+    var p = g.variantes[0].p, info = SECCIONES[p.orden] || { icono: 'fa-basket-shopping' }, varias = g.variantes.length > 1;
     g.variantes.forEach(function (v) { grupoDe[v.p.cod] = g; });
     var foto = g.variantes.map(function (v) { return FOTOS[v.p.cod]; }).filter(Boolean)[0];
     var media = foto
@@ -202,8 +222,38 @@ function activarBuscador() {
       html += '<section class="cat-seccion" id="' + id + '"><h2><i class="fa-solid ' + SECCIONES[o].icono + '" aria-hidden="true"></i>' + esc(titulo) + '</h2>' +
         '<p>' + esc(SECCIONES[o].desc) + '</p>' + cuerpo + '</section>';
     });
+    // Más marcas (26/11, Víctor: que sepan todo lo que tenemos, como el índice de marcas de la primera hoja del PDF).
+    // Primero un índice de marcas; los productos de cada marca se dibujan recién cuando se abre (son más de mil).
+    marcas = {}; ordenMarcas = [];
+    productos.forEach(function (p) {
+      if (SECCIONES[p.orden]) return;
+      if (!marcas[p.orden]) { marcas[p.orden] = { nombre: p.seccion, items: [], dibujada: false }; ordenMarcas.push(p.orden); }
+      marcas[p.orden].items.push(p);
+    });
+    ordenMarcas.sort(function (a, b) { return String(marcas[a].nombre).localeCompare(String(marcas[b].nombre), 'es'); });
+    if (ordenMarcas.length) {
+      chips += '<a class="chip chip-mas" href="#mas-marcas">Más marcas</a>';
+      html += '<section class="cat-seccion mas-marcas" id="mas-marcas"><h2><i class="fa-solid fa-store" aria-hidden="true"></i>Más marcas</h2>' +
+        '<p>También trabajamos con todas estas marcas. Tocá una para ver sus productos y precios, o buscá lo que necesitás arriba.</p>' +
+        '<div class="marcas-indice">' + ordenMarcas.map(function (o) {
+          return '<a class="marca-btn" href="#marca-' + o + '" data-orden="' + o + '">' + esc(marcas[o].nombre) + ' <small>' + marcas[o].items.length + '</small></a>';
+        }).join('') + '</div>' +
+        ordenMarcas.map(function (o) {
+          return '<details class="marca" id="marca-' + o + '" data-orden="' + o + '"><summary>' + esc(marcas[o].nombre) +
+            ' <small>' + marcas[o].items.length + ' productos</small></summary><div class="marca-cuerpo"></div></details>';
+        }).join('') + '</section>';
+    }
     document.getElementById('secciones').innerHTML = html;
     document.getElementById('chips').innerHTML = chips;
+  }
+  var marcas = {}, ordenMarcas = [];
+  function dibujarMarca(o) {
+    var m = marcas[o];
+    if (!m || m.dibujada) return;
+    m.dibujada = true;
+    var d = document.getElementById('marca-' + o);
+    d.querySelector('.marca-cuerpo').innerHTML = '<div class="cat-grid">' + agrupar(m.items).map(tarjeta).join('') + '</div>';
+    pintar();
   }
 
   function pintar() {
@@ -243,7 +293,16 @@ function activarBuscador() {
     if (!barra.classList.contains('visible')) barraDesde = 0;
   }
 
+  document.querySelector('main').addEventListener('toggle', function (e) {
+    if (e.target.matches && e.target.matches('details.marca') && e.target.open) dibujarMarca(e.target.dataset.orden);
+  }, true);
   document.querySelector('main').addEventListener('click', function (e) {
+    var mb = e.target.closest('a.marca-btn');
+    if (mb) {
+      var d = document.getElementById('marca-' + mb.dataset.orden);
+      dibujarMarca(mb.dataset.orden);
+      d.open = true;
+    }
     var b = e.target.closest('button[data-d]');
     if (!b) return;
     var cod = b.closest('.prod-card').dataset.cod;

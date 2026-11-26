@@ -181,3 +181,15 @@ body.escribiendo .barra-pedido{display:none}
 .nota-precios a{color:var(--primary);font-weight:600}
 .lista-estado{text-align:center;padding:3rem 1rem;font-size:1.05rem;color:var(--dark)}
 .lista-estado a{color:var(--primary);font-weight:600}
+
+/* Más marcas: índice y marcas desplegables (26/11) */
+.marcas-indice{display:flex;flex-wrap:wrap;gap:.45rem;margin:.8rem 0 1.4rem}
+.marca-btn{text-decoration:none;font-size:.88rem;font-weight:600;color:var(--dark);background:#fff;border:1px solid #e3ddd0;padding:.4rem .75rem;border-radius:20px}
+.marca-btn small{color:#8a8273;font-weight:500;margin-left:.15rem}
+.marca{border-top:1px solid #eee8dc;scroll-margin-top:200px}
+.marca summary{cursor:pointer;padding:.9rem .2rem;font-weight:700;font-size:1.02rem;color:var(--dark);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.marca summary::-webkit-details-marker{display:none}
+.marca summary::after{content:'+';font-size:1.3rem;color:var(--primary);margin-left:.6rem}
+.marca[open] summary::after{content:'−'}
+.marca summary small{font-weight:500;color:#8a8273;font-size:.8rem;margin-left:auto}
+.marca-cuerpo{padding-bottom:1rem}
