@@ -371,7 +371,8 @@ function activarBuscador() {
     document.getElementById('resumen-cant').textContent = unidades + (unidades === 1 ? ' producto' : ' productos');
     document.getElementById('resumen').textContent = pesos(total);
     // El pedido como una orden de compra (24/11, Víctor): cantidad, producto, precio, subtotal y total, en la pantalla y en el WhatsApp
-    var texto = 'Hola Víctor! ' + (cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n') +
+    var quien = new URLSearchParams(location.search).get('h') || '';
+    var texto = 'Hola Víctor! ' + (quien && cliente ? 'Soy ' + quien + ', de ' + cliente + '. ' : quien ? 'Soy ' + quien + '. ' : cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n') +
       (total ? '\n\nTotal aproximado: ' + pesos(total) : '');
     document.getElementById('mandar').href = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent(texto);
     document.getElementById('revisar-lista').innerHTML = filas.join('');
@@ -474,7 +475,9 @@ function activarBuscador() {
       if (/^(particular|particulares|cliente|consumidor( final)?|varios)$/i.test(cliente.trim())) { cliente = ''; res.d.habituales = []; }
       productos = res.d.productos || [];
       habituales = res.d.habituales || [];
-      document.getElementById('hola').textContent = cliente ? 'Hola, ' + cliente : 'Hola';
+      // 27/11: el link de cada persona trae su nombre (&h=María Elena): la lista la saluda a ella, no al comercio
+      var persona = (new URLSearchParams(location.search).get('h') || (cliente ? res.d.contacto : '') || '').replace(/[<>]/g, '').trim().slice(0, 40);
+      document.getElementById('hola').textContent = persona ? 'Hola, ' + persona : cliente ? 'Hola, ' + cliente : 'Hola';
       document.getElementById('saludo').textContent = 'Aquí te envío la lista de precios para que elijas los productos que quieras.';
       var nota = document.getElementById('nota');
       var f = res.d.actualizado ? res.d.actualizado.split('-').reverse().join('/') : null;
