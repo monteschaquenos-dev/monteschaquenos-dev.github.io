@@ -315,3 +315,19 @@ body.escribiendo .barra-pedido{display:none}
 .pg-lista .barra-pedido .btn-wsp{border-radius:12px;padding:.7rem 1rem;background:#25D366}
 .pg-lista .revisar-caja .btn-vaciar{background:none;border:0;color:#b3302c;font:inherit;font-size:.85rem;padding:.3rem;cursor:pointer;text-decoration:underline}
 @media (min-width:700px){.pg-lista .barra-pedido{left:50%;right:auto;transform:translateX(-50%);width:min(560px,94%)}}
+
+/* Catálogo público con el diseño de la lista (27/11): sin precios, con los botones para pedir la lista */
+.pg-publico .lista-etiqueta{text-decoration:none}
+.pg-publico .lista-hero{padding:1.4rem 4% 1.4rem}
+.pg-publico .lista-hero p{margin-bottom:.9rem}
+.pg-publico .hero-botones{display:flex;gap:.5rem;flex-wrap:wrap}
+.pg-publico .btn-hero{flex:1 1 140px;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.7rem .5rem;border-radius:22px;text-decoration:none;font-weight:600;font-size:.82rem;white-space:nowrap}
+.pg-publico .btn-hero.comercio{background:#25D366;color:#0b3d1f}
+.pg-publico .btn-hero.casa{background:#fff;color:var(--primary)}
+.pg-publico .hero-nota{display:block;margin-top:.7rem;font-size:.78rem;color:#cfd8ca}
+.pg-publico .prod-pres{font-size:.76rem;color:#8a8273}
+.pg-publico .cat{padding-bottom:3rem}
+.pg-publico .cta-pie{margin-top:1.6rem;background:var(--primary);color:#fff;border-radius:14px;padding:1.3rem 1.1rem;text-align:center}
+.pg-publico .cta-pie h2{color:#fff;font-size:1.4rem;margin-bottom:.3rem}
+.pg-publico .cta-pie p{font-size:.88rem;color:#dfe6da;margin-bottom:.9rem}
+.pg-publico .cta-pie .btn-wsp{justify-content:center;border-radius:22px;padding:.75rem 1.3rem}

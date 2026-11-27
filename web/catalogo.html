@@ -11,462 +11,131 @@
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="Montes Chaqueños">
 <meta property="og:title" content="Catálogo | Montes Chaqueños">
-<meta property="og:description" content="Catálogo de Montes Chaqueños: huevos de campo, pan del Peregrino, mieles, mermeladas y productos de la colmena, de productores directos.">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<meta property="og:description" content="Huevos de campo, pan del Peregrino, mieles, mermeladas y productos de la colmena, de productores directos.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css">
+<link rel="stylesheet" href="css/estilo.css?v=20261127b">
 </head>
-<body>
+<body class="pg-lista pg-publico">
 
-<header class="header-simple">
-  <a href="index.html" class="logo">
-    <img src="../assets/logo.jpg" alt="Logo Montes Chaqueños">
+<!-- 27/11: el mismo diseño que la lista de precios de los clientes, sin precios (la web pública no los muestra) -->
+<header class="lista-top">
+  <a href="index.html" class="lista-marca" aria-label="Montes Chaqueños, ir al inicio">
+    <img src="../assets/logo.jpg" alt="">
     <span>Montes Chaqueños</span>
   </a>
-  <a href="index.html" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Volver al inicio</a>
+  <a href="index.html" class="lista-etiqueta">Inicio</a>
 </header>
 
-<section class="cat-hero">
+<section class="lista-hero">
   <h1>Nuestro catálogo</h1>
-  <p>60 productos de producción propia y de productores directos. Repartimos a comercios en Capital, zona sur y zona oeste.</p>
-  <a class="btn btn-wsp-hero" href="https://wa.me/5491153472956?text=Hola!%20Tengo%20un%20comercio%20y%20quiero%20recibir%20la%20lista%20de%20precios." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> ¿Tenés un comercio? Pedí tu lista de precios</a>
+  <p>Huevos de campo, pan artesanal, mieles y productos de la colmena, de productores directos. Repartimos en Capital, zona sur y zona oeste.</p>
+  <div class="hero-botones">
+    <a class="btn-hero comercio" href="https://wa.me/5491153472956?text=Hola!%20Tengo%20un%20comercio%20y%20quiero%20recibir%20la%20lista%20de%20precios." target="_blank" rel="noopener"><i class="fa-solid fa-store" aria-hidden="true"></i> Tengo un comercio</a>
+    <a class="btn-hero casa" href="https://wa.me/5491153472956?text=Hola!%20Quiero%20comprar%20para%20mi%20casa%2C%20%C2%BFme%20pas%C3%A1s%20la%20lista%20de%20precios%3F" target="_blank" rel="noopener"><i class="fa-solid fa-house" aria-hidden="true"></i> Compro para mi casa</a>
+  </div>
+  <small class="hero-nota"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Te mandamos la lista de precios por WhatsApp y armás el pedido desde ahí.</small>
 </section>
 
 <div class="cat-barra">
   <div class="cat-barra-in">
-    <input class="buscador" id="buscador" type="search" placeholder="Buscar producto (ej: arándano, miel, pan)" aria-label="Buscar producto">
-    <nav class="chips" id="chips" aria-label="Secciones"><a class="chip" href="#huevos-de-campo">Huevos de campo</a><a class="chip" href="#pan-del-peregrino">Pan del Peregrino</a><a class="chip" href="#miel-y-productos-de-la-colmena">Miel y productos de la colmena</a><a class="chip" href="#las-quinas">Las Quinas</a><a class="chip" href="#cabana-mico-el-bolson">Cabaña Micó · El Bolsón</a><a class="chip" href="#los-franciscanos">Los Franciscanos</a></nav>
+    <label class="buscador-caja"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input class="buscador" id="buscador" type="search" placeholder="Buscar: arándano, miel, pan…" aria-label="Buscar producto"></label>
   </div>
 </div>
 
 <main class="cat">
-<section class="cat-seccion" id="huevos-de-campo">
-<h2><i class="fa-solid fa-egg" aria-hidden="true"></i>Huevos de campo</h2>
-<p>Seleccionados y envasados por nosotros, con fecha en cada envase.</p>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6301" data-nombre="Huevo de campo estuchado (docena)" data-busca="huevo-de-campo-estuchado-docena">
-  <div class="prod-foto"><img src="fotos/6301.jpg" alt="Huevo de campo estuchado (docena)" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Huevo de campo estuchado (docena)</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6302" data-nombre="Huevo de campo en maple (30 huevos)" data-busca="huevo-de-campo-en-maple-30-huevos">
-  <div class="prod-foto"><img src="fotos/6302.jpg" alt="Huevo de campo en maple (30 huevos)" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Huevo de campo en maple (30 huevos)</div>
-  </div>
-</article>
-</div>
-</section>
-<section class="cat-seccion" id="pan-del-peregrino">
-<h2><i class="fa-solid fa-bread-slice" aria-hidden="true"></i>Pan del Peregrino</h2>
-<p>Panificados artesanales, de producción directa.</p>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6003" data-nombre="El Peregrino Pan De Molde Con Sal 500 Gr" data-busca="el-peregrino-pan-de-molde-con-sal-500-gr">
-  <div class="prod-foto"><img src="fotos/6003.jpg" alt="El Peregrino Pan De Molde Con Sal 500 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">El Peregrino Pan De Molde Con Sal 500 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6004" data-nombre="El Peregrino Pan De Molde Sin Sal 500 Gr" data-busca="el-peregrino-pan-de-molde-sin-sal-500-gr">
-  <div class="prod-foto"><img src="fotos/6004.jpg" alt="El Peregrino Pan De Molde Sin Sal 500 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">El Peregrino Pan De Molde Sin Sal 500 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6005" data-nombre="El Peregrino Pan Multi Cereal" data-busca="el-peregrino-pan-multi-cereal">
-  <div class="prod-foto"><img src="fotos/6005.jpg" alt="El Peregrino Pan Multi Cereal" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">El Peregrino Pan Multi Cereal</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6006" data-nombre="El Peregrino Pan De Sandwich" data-busca="el-peregrino-pan-de-sandwich">
-  <div class="prod-foto"><img src="fotos/6006.jpg" alt="El Peregrino Pan De Sandwich" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">El Peregrino Pan De Sandwich</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6007" data-nombre="El Peregrino Pizzetas 500 Gr" data-busca="el-peregrino-pizzetas-500-gr">
-  <div class="prod-foto"><img src="fotos/6007.jpg" alt="El Peregrino Pizzetas 500 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">El Peregrino Pizzetas 500 Gr</div>
-  </div>
-</article>
-</div>
-</section>
-<section class="cat-seccion" id="miel-y-productos-de-la-colmena">
-<h2><i class="fa-solid fa-jar" aria-hidden="true"></i>Miel y productos de la colmena</h2>
-<p>Mieles de Morrens y otros productos de la colmena.</p>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6016" data-nombre="Jalea Real 10 Gr (envase plástico con dosificador)" data-busca="jalea-real-10-gr-envase-plastico-con-dosificador">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Jalea Real 10 Gr (envase plástico con dosificador)</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="POLBA" data-nombre="Polen Del Delta (precio por kg)" data-busca="polen-del-delta-precio-por-kg">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Polen Del Delta (precio por kg)</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6012" data-nombre="Morrens Miel Cremosa Vidrio 900 Gr" data-busca="morrens-miel-cremosa-vidrio-900-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Cremosa Vidrio 900 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6015" data-nombre="Morrens Miel Líquida Vidrio 900 Gr" data-busca="morrens-miel-liquida-vidrio-900-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Líquida Vidrio 900 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="1-00260" data-nombre="Morrens Miel Suelta Cremosa (tacho de 12 kg, precio por kg)" data-busca="morrens-miel-suelta-cremosa-tacho-de-12-kg-precio-por-kg">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Suelta Cremosa (tacho de 12 kg, precio por kg)</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="CDAV" data-nombre="Cera De Abeja Virgen (precio por kg, se puede pedir fraccionada)" data-busca="cera-de-abeja-virgen-precio-por-kg-se-puede-pedir-fraccionada">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Cera De Abeja Virgen (precio por kg, se puede pedir fraccionada)</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="MMCC" data-nombre="Morrens Miel Cremosa Vidrio 250 Gr" data-busca="morrens-miel-cremosa-vidrio-250-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Cremosa Vidrio 250 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="MMLV" data-nombre="Morrens Miel Líquida Vidrio 250 Gr" data-busca="morrens-miel-liquida-vidrio-250-gr">
-  <div class="prod-foto"><img src="fotos/MMLV.jpg" alt="Morrens Miel Líquida Vidrio 250 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Líquida Vidrio 250 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="MMMV" data-nombre="Morrens Miel Cremosa Vidrio 500 Gr" data-busca="morrens-miel-cremosa-vidrio-500-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Cremosa Vidrio 500 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="MMS" data-nombre="Morrens Miel Suelta Líquida (tacho de 12 kg, precio por kg)" data-busca="morrens-miel-suelta-liquida-tacho-de-12-kg-precio-por-kg">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Suelta Líquida (tacho de 12 kg, precio por kg)</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="MML500" data-nombre="Morrens Miel Líquida Vidrio 500 Gr" data-busca="morrens-miel-liquida-vidrio-500-gr">
-  <div class="prod-foto"><img src="fotos/MML500.jpg" alt="Morrens Miel Líquida Vidrio 500 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Morrens Miel Líquida Vidrio 500 Gr</div>
-  </div>
-</article>
-</div>
-</section>
-<section class="cat-seccion" id="las-quinas">
-<h2><i class="fa-solid fa-jar" aria-hidden="true"></i>Las Quinas</h2>
-<p>Mieles orgánicas y mermeladas sin azúcar agregada.</p>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6047" data-nombre="Las Quinas Miel Cremosa Orgánica 500 Gr" data-busca="las-quinas-miel-cremosa-organica-500-gr">
-  <div class="prod-foto"><img src="fotos/6047.jpg" alt="Las Quinas Miel Cremosa Orgánica 500 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Miel Cremosa Orgánica 500 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6048" data-nombre="Las Quinas Miel Líquida Orgánica 500 Gr" data-busca="las-quinas-miel-liquida-organica-500-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Miel Líquida Orgánica 500 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6050" data-nombre="Las Quinas Mermelada De Arándano Sin Azúcar" data-busca="las-quinas-mermelada-de-arandano-sin-azucar">
-  <div class="prod-foto"><img src="fotos/6050.jpg" alt="Las Quinas Mermelada De Arándano Sin Azúcar" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Mermelada De Arándano Sin Azúcar</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6051" data-nombre="Las Quinas Mermelada De Ciruela Sin Azúcar" data-busca="las-quinas-mermelada-de-ciruela-sin-azucar">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Mermelada De Ciruela Sin Azúcar</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6052" data-nombre="Las Quinas Mermelada De Durazno Sin Azúcar" data-busca="las-quinas-mermelada-de-durazno-sin-azucar">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Mermelada De Durazno Sin Azúcar</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6053" data-nombre="Las Quinas Mermelada De Frutilla Sin Azúcar" data-busca="las-quinas-mermelada-de-frutilla-sin-azucar">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Mermelada De Frutilla Sin Azúcar</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6054" data-nombre="Las Quinas Mermelada De Frutos Rojos Sin Azúcar" data-busca="las-quinas-mermelada-de-frutos-rojos-sin-azucar">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Mermelada De Frutos Rojos Sin Azúcar</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6055" data-nombre="Las Quinas Dulce De Leche Con Stevia 450 Gr" data-busca="las-quinas-dulce-de-leche-con-stevia-450-gr">
-  <div class="prod-foto"><img src="fotos/6055.jpg" alt="Las Quinas Dulce De Leche Con Stevia 450 Gr" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Dulce De Leche Con Stevia 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6059" data-nombre="Las Quinas Mermelada De Mora 400 Gr" data-busca="las-quinas-mermelada-de-mora-400-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-jar" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Las Quinas Mermelada De Mora 400 Gr</div>
-  </div>
-</article>
-</div>
-</section>
-<section class="cat-seccion" id="cabana-mico-el-bolson">
-<h2><i class="fa-solid fa-mountain" aria-hidden="true"></i>Cabaña Micó · El Bolsón</h2>
-<p>Confituras, mermeladas dietéticas y jugos de la Patagonia.</p>
-<h3 class="cat-sub">Confituras · 450 g</h3>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6021" data-nombre="Confitura De Arándanos 450 Gr" data-busca="confitura-de-arandanos-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Arándanos 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6022" data-nombre="Confitura De Cereza 450 Gr" data-busca="confitura-de-cereza-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Cereza 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6023" data-nombre="Confitura De Durazno 450 Gr" data-busca="confitura-de-durazno-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Durazno 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6024" data-nombre="Confitura De Frambuesa 450 Gr" data-busca="confitura-de-frambuesa-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Frambuesa 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6025" data-nombre="Confitura De Frutilla 450 Gr" data-busca="confitura-de-frutilla-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Frutilla 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6026" data-nombre="Confitura De Frutos Del Bosque 450 Gr" data-busca="confitura-de-frutos-del-bosque-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Frutos Del Bosque 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6027" data-nombre="Confitura De Guinda 450 Gr" data-busca="confitura-de-guinda-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Guinda 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6028" data-nombre="Confitura De Manzana 450 Gr" data-busca="confitura-de-manzana-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Manzana 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6029" data-nombre="Confitura De Mosqueta 450 Gr" data-busca="confitura-de-mosqueta-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Mosqueta 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6030" data-nombre="Confitura De Sauco 450 Gr" data-busca="confitura-de-sauco-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Sauco 450 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6031" data-nombre="Confitura De Zarzamora 450 Gr" data-busca="confitura-de-zarzamora-450-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Confitura De Zarzamora 450 Gr</div>
-  </div>
-</article>
-</div>
-<h3 class="cat-sub">Mermeladas dietéticas · 380 g</h3>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6032" data-nombre="Mermelada Diet De Arándanos 380 Gr" data-busca="mermelada-diet-de-arandanos-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Arándanos 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6033" data-nombre="Mermelada Diet De Cereza 380 Gr" data-busca="mermelada-diet-de-cereza-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Cereza 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6034" data-nombre="Mermelada Diet De Durazno 380 Gr" data-busca="mermelada-diet-de-durazno-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Durazno 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6035" data-nombre="Mermelada Diet De Frambuesa 380 Gr" data-busca="mermelada-diet-de-frambuesa-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Frambuesa 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6036" data-nombre="Mermelada Diet De Frutilla 380 Gr" data-busca="mermelada-diet-de-frutilla-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Frutilla 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6037" data-nombre="Mermelada Diet De Frutos Del Bosque 380 Gr" data-busca="mermelada-diet-de-frutos-del-bosque-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Frutos Del Bosque 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6038" data-nombre="Mermelada Diet De Guinda 380 Gr" data-busca="mermelada-diet-de-guinda-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Guinda 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6039" data-nombre="Mermelada Diet De Manzana 380 Gr" data-busca="mermelada-diet-de-manzana-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Manzana 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6040" data-nombre="Mermelada Diet De Mosqueta 380 Gr" data-busca="mermelada-diet-de-mosqueta-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Mosqueta 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6041" data-nombre="Mermelada Diet De Sauco 380 Gr" data-busca="mermelada-diet-de-sauco-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Sauco 380 Gr</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6042" data-nombre="Mermelada Diet De Zarzamora 380 Gr" data-busca="mermelada-diet-de-zarzamora-380-gr">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Mermelada Diet De Zarzamora 380 Gr</div>
-  </div>
-</article>
-</div>
-<h3 class="cat-sub">Jugos de arándano sin azúcar</h3>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6043" data-nombre="Jugo De Arándanos Sin Azúcar 500 Cc" data-busca="jugo-de-arandanos-sin-azucar-500-cc">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Jugo De Arándanos Sin Azúcar 500 Cc</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6044" data-nombre="Jugo De Arándanos Sin Azúcar 1,5 Litros" data-busca="jugo-de-arandanos-sin-azucar-1-5-litros">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Jugo De Arándanos Sin Azúcar 1,5 Litros</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6045" data-nombre="Jugo De Arándanos Sin Azúcar 5 Litros" data-busca="jugo-de-arandanos-sin-azucar-5-litros">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-mountain" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Jugo De Arándanos Sin Azúcar 5 Litros</div>
-  </div>
-</article>
-</div>
-</section>
-<section class="cat-seccion" id="los-franciscanos">
-<h2><i class="fa-solid fa-leaf" aria-hidden="true"></i>Los Franciscanos</h2>
-<p>Propóleo, caramelos y jalea real.</p>
-<div class="cat-grid">
-<article class="prod-card" data-cod="6017" data-nombre="Los Franciscanos Propóleo 120 cc" data-busca="los-franciscanos-propoleo-120-cc">
-  <div class="prod-foto"><img src="fotos/6017.jpg" alt="Los Franciscanos Propóleo 120 cc" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Propóleo 120 cc</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="6018" data-nombre="Los Franciscanos Propóleo 60 cc" data-busca="los-franciscanos-propoleo-60-cc">
-  <div class="prod-foto"><img src="fotos/6018.jpg" alt="Los Franciscanos Propóleo 60 cc" loading="lazy"></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Propóleo 60 cc</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="1-00274" data-nombre="Los Franciscanos Caramelos de miel 250 g" data-busca="los-franciscanos-caramelos-de-miel-250-g">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-leaf" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Caramelos de miel 250 g</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="1-00275" data-nombre="Los Franciscanos Caramelos de miel y limón 250 g" data-busca="los-franciscanos-caramelos-de-miel-y-limon-250-g">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-leaf" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Caramelos de miel y limón 250 g</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="1-00276" data-nombre="Los Franciscanos Caramelos de miel y menta 250 g" data-busca="los-franciscanos-caramelos-de-miel-y-menta-250-g">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-leaf" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Caramelos de miel y menta 250 g</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="AFCP" data-nombre="Los Franciscanos Caramelos de propóleo 250 g" data-busca="los-franciscanos-caramelos-de-propoleo-250-g">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-leaf" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Caramelos de propóleo 250 g</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="LFCPYE" data-nombre="Los Franciscanos Caramelos de propóleo, miel y eucalipto 250 g" data-busca="los-franciscanos-caramelos-de-propoleo-miel-y-eucalipto-250-g">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-leaf" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Caramelos de propóleo, miel y eucalipto 250 g</div>
-  </div>
-</article>
-<article class="prod-card" data-cod="AFJRC30" data-nombre="Los Franciscanos Jalea real 30 cápsulas" data-busca="los-franciscanos-jalea-real-30-capsulas">
-  <div class="prod-foto sin-foto"><i class="fa-solid fa-leaf" aria-hidden="true"></i></div>
-  <div class="prod-info">
-    <div class="prod-nombre">Los Franciscanos Jalea real 30 cápsulas</div>
-  </div>
-</article>
-</div>
-</section>
+<div id="secciones"></div>
 <p class="vacio" id="vacio">No encontramos productos con esa búsqueda. Escribinos por WhatsApp y te lo conseguimos.</p>
-<p class="nota-precios">Vendemos a comercios. Para recibir la lista de precios, escribinos por <a href="https://wa.me/5491153472956?text=Hola!%20Tengo%20un%20comercio%20y%20quiero%20recibir%20la%20lista%20de%20precios." target="_blank" rel="noopener">WhatsApp</a>.</p>
+<section class="cta-pie">
+  <h2>¿Querés los precios?</h2>
+  <p>Te mandamos la lista por WhatsApp: es personal, con los precios del día, y desde ahí armás el pedido.</p>
+  <a class="btn-wsp" href="https://wa.me/5491153472956?text=Hola!%20Quiero%20recibir%20la%20lista%20de%20precios." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Pedir la lista de precios</a>
+</section>
 </main>
 
 <script>
 (function () {
-function activarBuscador() {
-  var buscador = document.getElementById('buscador');
-  function norm(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
-  buscador.addEventListener('input', function () {
-    var q = norm(buscador.value.trim()), visibles = 0;
-    Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
-      var ok = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.nombre).indexOf(q) !== -1;
-      t.style.display = ok ? '' : 'none';
-      if (ok) visibles++;
+  var FUNCION = 'https://kvobkqaujufugdyxxovb.supabase.co/functions/v1/catalogo?publico=1';
+  var FOTOS = {"6003":"fotos/6003.jpg","6004":"fotos/6004.jpg","6005":"fotos/6005.jpg","6006":"fotos/6006.jpg","6007":"fotos/6007.jpg","6017":"fotos/6017.jpg","6018":"fotos/6018.jpg","6047":"fotos/6047.jpg","6050":"fotos/6050.jpg","6055":"fotos/6055.jpg","6301":"fotos/6301.jpg","6302":"fotos/6302.jpg","MMLV":"fotos/MMLV.jpg","MML500":"fotos/MML500.jpg"};
+  var SECCIONES = {"10":{"icono":"fa-egg","desc":"Seleccionados y envasados por nosotros, con fecha en cada envase."},"20":{"icono":"fa-bread-slice","desc":"Panificados artesanales, de producción directa."},"30":{"icono":"fa-jar","desc":"Mieles de Morrens y otros productos de la colmena."},"40":{"icono":"fa-jar","desc":"Mieles orgánicas y mermeladas sin azúcar agregada."},"50":{"icono":"fa-mountain","desc":"Confituras, mermeladas dietéticas y jugos de la Patagonia."},"60":{"icono":"fa-leaf","desc":"Propóleo, caramelos y jalea real."}};
+  var PREFIJO = { 20: /^El Peregrino\s+/i, 40: /^Las Quinas\s+/i, 60: /^Los Franciscanos\s+/i };
+  // Respaldo: si la función no responde, se muestra esto (sin fotos nuevas)
+  var productos = [{"cod":"6301","nombre":"Huevo de campo estuchado (docena)","seccion":"Huevos de campo","orden":10},{"cod":"6302","nombre":"Huevo de campo en maple (30 huevos)","seccion":"Huevos de campo","orden":10},{"cod":"6003","nombre":"El Peregrino Pan De Molde Con Sal 500 Gr","seccion":"Pan del Peregrino","orden":20},{"cod":"6004","nombre":"El Peregrino Pan De Molde Sin Sal 500 Gr","seccion":"Pan del Peregrino","orden":20},{"cod":"6005","nombre":"El Peregrino Pan Multi Cereal","seccion":"Pan del Peregrino","orden":20},{"cod":"6006","nombre":"El Peregrino Pan De Sandwich","seccion":"Pan del Peregrino","orden":20},{"cod":"6007","nombre":"El Peregrino Pizzetas 500 Gr","seccion":"Pan del Peregrino","orden":20},{"cod":"6016","nombre":"Jalea Real 10 Gr (envase plástico con dosificador)","seccion":"Miel y productos de la colmena","orden":30},{"cod":"POLBA","nombre":"Polen Del Delta (precio por kg)","seccion":"Miel y productos de la colmena","orden":30},{"cod":"6012","nombre":"Morrens Miel Cremosa Vidrio 900 Gr","seccion":"Miel y productos de la colmena","orden":30},{"cod":"6015","nombre":"Morrens Miel Líquida Vidrio 900 Gr","seccion":"Miel y productos de la colmena","orden":30},{"cod":"1-00260","nombre":"Morrens Miel Suelta Cremosa (tacho de 12 kg, precio por kg)","seccion":"Miel y productos de la colmena","orden":30},{"cod":"CDAV","nombre":"Cera De Abeja Virgen (precio por kg, se puede pedir fraccionada)","seccion":"Miel y productos de la colmena","orden":30},{"cod":"MMCC","nombre":"Morrens Miel Cremosa Vidrio 250 Gr","seccion":"Miel y productos de la colmena","orden":30},{"cod":"MMLV","nombre":"Morrens Miel Líquida Vidrio 250 Gr","seccion":"Miel y productos de la colmena","orden":30},{"cod":"MMMV","nombre":"Morrens Miel Cremosa Vidrio 500 Gr","seccion":"Miel y productos de la colmena","orden":30},{"cod":"MMS","nombre":"Morrens Miel Suelta Líquida (tacho de 12 kg, precio por kg)","seccion":"Miel y productos de la colmena","orden":30},{"cod":"MML500","nombre":"Morrens Miel Líquida Vidrio 500 Gr","seccion":"Miel y productos de la colmena","orden":30},{"cod":"6047","nombre":"Las Quinas Miel Cremosa Orgánica 500 Gr","seccion":"Las Quinas","orden":40},{"cod":"6048","nombre":"Las Quinas Miel Líquida Orgánica 500 Gr","seccion":"Las Quinas","orden":40},{"cod":"6050","nombre":"Las Quinas Mermelada De Arándano Sin Azúcar","seccion":"Las Quinas","orden":40},{"cod":"6051","nombre":"Las Quinas Mermelada De Ciruela Sin Azúcar","seccion":"Las Quinas","orden":40},{"cod":"6052","nombre":"Las Quinas Mermelada De Durazno Sin Azúcar","seccion":"Las Quinas","orden":40},{"cod":"6053","nombre":"Las Quinas Mermelada De Frutilla Sin Azúcar","seccion":"Las Quinas","orden":40},{"cod":"6054","nombre":"Las Quinas Mermelada De Frutos Rojos Sin Azúcar","seccion":"Las Quinas","orden":40},{"cod":"6055","nombre":"Las Quinas Dulce De Leche Con Stevia 450 Gr","seccion":"Las Quinas","orden":40},{"cod":"6059","nombre":"Las Quinas Mermelada De Mora 400 Gr","seccion":"Las Quinas","orden":40},{"cod":"6021","nombre":"Confitura De Arándanos 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6022","nombre":"Confitura De Cereza 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6023","nombre":"Confitura De Durazno 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6024","nombre":"Confitura De Frambuesa 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6025","nombre":"Confitura De Frutilla 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6026","nombre":"Confitura De Frutos Del Bosque 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6027","nombre":"Confitura De Guinda 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6028","nombre":"Confitura De Manzana 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6029","nombre":"Confitura De Mosqueta 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6030","nombre":"Confitura De Sauco 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6031","nombre":"Confitura De Zarzamora 450 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6032","nombre":"Mermelada Diet De Arándanos 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6033","nombre":"Mermelada Diet De Cereza 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6034","nombre":"Mermelada Diet De Durazno 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6035","nombre":"Mermelada Diet De Frambuesa 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6036","nombre":"Mermelada Diet De Frutilla 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6037","nombre":"Mermelada Diet De Frutos Del Bosque 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6038","nombre":"Mermelada Diet De Guinda 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6039","nombre":"Mermelada Diet De Manzana 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6040","nombre":"Mermelada Diet De Mosqueta 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6041","nombre":"Mermelada Diet De Sauco 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6042","nombre":"Mermelada Diet De Zarzamora 380 Gr","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6043","nombre":"Jugo De Arándanos Sin Azúcar 500 Cc","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6044","nombre":"Jugo De Arándanos Sin Azúcar 1,5 Litros","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6045","nombre":"Jugo De Arándanos Sin Azúcar 5 Litros","seccion":"Cabaña Micó · El Bolsón","orden":50},{"cod":"6017","nombre":"Los Franciscanos Propóleo 120 cc","seccion":"Los Franciscanos","orden":60},{"cod":"6018","nombre":"Los Franciscanos Propóleo 60 cc","seccion":"Los Franciscanos","orden":60},{"cod":"1-00274","nombre":"Los Franciscanos Caramelos de miel 250 g","seccion":"Los Franciscanos","orden":60},{"cod":"1-00275","nombre":"Los Franciscanos Caramelos de miel y limón 250 g","seccion":"Los Franciscanos","orden":60},{"cod":"1-00276","nombre":"Los Franciscanos Caramelos de miel y menta 250 g","seccion":"Los Franciscanos","orden":60},{"cod":"AFCP","nombre":"Los Franciscanos Caramelos de propóleo 250 g","seccion":"Los Franciscanos","orden":60},{"cod":"LFCPYE","nombre":"Los Franciscanos Caramelos de propóleo, miel y eucalipto 250 g","seccion":"Los Franciscanos","orden":60},{"cod":"AFJRC30","nombre":"Los Franciscanos Jalea real 30 cápsulas","seccion":"Los Franciscanos","orden":60}];
+
+  function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function norm(t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+  function slug(t) { return norm(t).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function corto(n, o) { return PREFIJO[o] ? String(n).replace(PREFIJO[o], '') : String(n); }
+  function subgrupo(p) {
+    if (p.orden !== 50) return '';
+    if (/^confitura/i.test(p.nombre)) return 'Confituras · 450 g';
+    if (/^mermelada diet/i.test(p.nombre)) return 'Mermeladas dietéticas · 380 g';
+    if (/^jugo/i.test(p.nombre)) return 'Jugos de arándano sin azúcar';
+    return '';
+  }
+  // Presentaciones de un mismo producto en una tarjeta ("Miel Cremosa Vidrio" 250 / 500 / 900 g)
+  var TAMANO = /\s+(\d+(?:[.,]\d+)?\s*(?:gr|grs|g|kg|cc|ml|litros?|lts?|l|c[aá]psulas)\b.*)$/i;
+  function agrupar(items) {
+    var por = {}, out = [];
+    items.forEach(function (p) {
+      var m = String(p.nombre).match(TAMANO), base = m ? p.nombre.slice(0, m.index).trim() : p.nombre;
+      var k = m ? slug(base) : 'solo-' + p.cod;
+      if (!por[k]) { por[k] = { base: base, items: [], pres: [] }; out.push(por[k]); }
+      por[k].items.push(p); if (m) por[k].pres.push(m[1].trim());
     });
-    Array.prototype.forEach.call(document.querySelectorAll('.cat-seccion'), function (s) {
-      var hay = Array.prototype.some.call(s.querySelectorAll('.prod-card'), function (t) { return t.style.display !== 'none'; });
-      s.style.display = hay ? '' : 'none';
+    return out.map(function (g) { return g.items.length > 1 ? g : { base: g.items[0].nombre, items: g.items, pres: [] }; });
+  }
+  function tarjeta(g) {
+    var p = g.items[0], info = SECCIONES[p.orden] || { icono: 'fa-basket-shopping' };
+    var foto = g.items.map(function (x) { return x.foto || FOTOS[x.cod]; }).filter(Boolean)[0];
+    var nombres = g.items.map(function (x) { return x.nombre; }).join(' ');
+    return '<article class="prod-card" data-busca="' + esc(norm(nombres)) + '" data-marca="' + esc(norm(p.seccion)) + '">' +
+      '<div class="prod-foto' + (foto ? '' : ' sin-foto') + '">' + (foto ? '<img src="' + esc(foto) + '" alt="' + esc(g.base) + '" loading="lazy">' : '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>') + '</div>' +
+      '<div class="prod-info"><div class="prod-nombre">' + esc(corto(g.base, p.orden)) + '</div>' +
+      (g.pres.length ? '<div class="prod-pres">' + g.pres.map(esc).join(' · ') + '</div>' : '') + '</div></article>';
+  }
+  function cuerpo(items) {
+    var subs = [], html = '';
+    items.forEach(function (p) { var s = subgrupo(p), x = subs.filter(function (y) { return y.g === s; })[0]; if (!x) { x = { g: s, items: [] }; subs.push(x); } x.items.push(p); });
+    subs.forEach(function (s) { if (s.g) html += '<h3 class="cat-sub">' + esc(s.g) + '</h3>'; html += '<div class="cat-grid">' + agrupar(s.items).map(tarjeta).join('') + '</div>'; });
+    return html;
+  }
+  function dibujar() {
+    var marcas = {}, orden = [];
+    productos.forEach(function (p) { if (!marcas[p.orden]) { marcas[p.orden] = { nombre: p.seccion, items: [] }; orden.push(p.orden); } marcas[p.orden].items.push(p); });
+    orden.sort(function (a, b) { return a - b; });
+    document.getElementById('secciones').innerHTML = orden.map(function (o, i) {
+      var m = marcas[o], info = SECCIONES[o] || { icono: 'fa-basket-shopping', desc: '' }, n = m.items.length;
+      return '<details class="marca propia"' + (i === 0 ? ' open' : '') + ' id="marca-' + o + '"><summary>' +
+        '<span class="marca-ico"><i class="fa-solid ' + info.icono + '" aria-hidden="true"></i></span>' +
+        '<span class="marca-tit">' + esc(m.nombre) + '<small>' + esc(info.desc) + '</small>' +
+        '<span class="marca-pie"><span class="marca-cant">' + n + (n === 1 ? ' producto' : ' productos') + '</span></span></span>' +
+        '<i class="fa-solid fa-chevron-down marca-flecha" aria-hidden="true"></i></summary><div class="marca-cuerpo">' + cuerpo(m.items) + '</div></details>';
+    }).join('');
+    filtrar();
+  }
+  function filtrar() {
+    var q = norm(document.getElementById('buscador').value.trim()), vis = 0;
+    // Por nombre del producto; si ninguno coincide, por la marca ("quinas", "peregrino")
+    var porNombre = !q || Array.prototype.some.call(document.querySelectorAll('.prod-card'), function (t) { return t.dataset.busca.indexOf(q) !== -1; });
+    Array.prototype.forEach.call(document.querySelectorAll('details.marca'), function (d) {
+      var hay = false;
+      Array.prototype.forEach.call(d.querySelectorAll('.prod-card'), function (t) {
+        var ok = !q || (porNombre ? t.dataset.busca : t.dataset.marca).indexOf(q) !== -1;
+        t.style.display = ok ? '' : 'none'; if (ok) { hay = true; vis++; }
+      });
+      d.style.display = hay ? '' : 'none';
+      if (q && hay) { if (!d.open) { d.open = true; d.dataset.porBusqueda = '1'; } }
+      if (!q && d.dataset.porBusqueda) { d.open = false; delete d.dataset.porBusqueda; }
     });
-    document.getElementById('vacio').style.display = visibles ? 'none' : 'block';
-  });
-}
-  activarBuscador();
+    document.getElementById('vacio').style.display = q && !vis ? 'block' : 'none';
+  }
+  document.getElementById('buscador').addEventListener('input', filtrar);
+  dibujar();
+  fetch(FUNCION).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (d && d.productos && d.productos.length) { productos = d.productos; dibujar(); }
+  }).catch(function () {});
 })();
 </script>
 </body>
