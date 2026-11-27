@@ -15,27 +15,29 @@
 <meta property="og:description" content="Lista de precios de Montes Chaqueños para comercios clientes.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="css/estilo.css?v=20261126d">
+<link rel="stylesheet" href="css/estilo.css?v=20261127a">
 </head>
-<body>
+<body class="pg-lista">
 
-<header class="header-simple">
-  <a href="index.html" class="logo">
-    <img src="../assets/logo.jpg" alt="Logo Montes Chaqueños">
+<!-- 27/11: encabezado chico (antes ocupaba un tercio de la pantalla junto con el buscador fijo) -->
+<header class="lista-top">
+  <a href="index.html" class="lista-marca" aria-label="Montes Chaqueños, ir al inicio">
+    <img src="../assets/logo.jpg" alt="">
     <span>Montes Chaqueños</span>
   </a>
-  <a href="index.html" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Volver al inicio</a>
+  <span class="lista-etiqueta">Lista de precios</span>
 </header>
 
-<section class="cat-hero">
-  <h1>Tu lista de precios</h1>
+<section class="lista-hero">
+  <h1 id="hola">Tu lista de precios</h1>
   <p id="saludo">Cargando los precios…</p>
 </section>
 
 <div class="cat-barra">
   <div class="cat-barra-in">
-    <input class="buscador" id="buscador" type="search" placeholder="Buscar producto (ej: arándano, miel, pan)" aria-label="Buscar producto">
-    <nav class="chips" id="chips" aria-label="Secciones"></nav>
+    <label class="buscador-caja"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input class="buscador" id="buscador" type="search" placeholder="Buscar: arándano, miel, pan…" aria-label="Buscar producto"></label>
+    <nav class="chips" id="chips" aria-label="Filtrar por cambio de precio"></nav>
   </div>
 </div>
 
@@ -47,11 +49,8 @@
 </main>
 
 <div class="barra-pedido" id="barra">
-  <div class="resumen" id="resumen"></div>
-  <div class="acciones">
-    <button type="button" class="btn-vaciar" id="vaciar">Vaciar</button>
-    <button type="button" class="btn-wsp" id="enviar"><i class="fa-brands fa-whatsapp"></i> Enviar pedido</button>
-  </div>
+  <div class="resumen"><span class="resumen-cant" id="resumen-cant"></span><b id="resumen"></b></div>
+  <button type="button" class="btn-wsp" id="enviar">Ver y enviar <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
 </div>
 
 <!-- Antes de mandar: el pedido para revisar (24/11: un toque sin querer en la barra mandaba el pedido) -->
@@ -67,6 +66,7 @@
     <p class="revisar-nota">Precios de hoy. Si algún producto no está disponible, te avisamos antes de entregar.</p>
     <a class="btn-wsp" id="mandar" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Mandar por WhatsApp</a>
     <button type="button" class="btn-seguir" id="seguir">Seguir agregando</button>
+    <button type="button" class="btn-vaciar" id="vaciar">Vaciar el pedido</button>
   </div>
 </div>
 
@@ -79,6 +79,17 @@
   var cliente = '';
   var cantidades = {};
   var productos = [];
+  var habituales = []; // 27/11: lo que suele pedir este cliente [{ cod, cant }] (la cantidad de la última vez)
+
+  // Dentro de su marca, el nombre sin la marca adelante (27/11): en "Las Quinas", "Miel Cremosa Orgánica 500 Gr"
+  var PREFIJO = { 20: /^El Peregrino\s+/i, 40: /^Las Quinas\s+/i, 60: /^Los Franciscanos\s+/i };
+  function nombreCorto(p) {
+    var n = String(p.nombre), re = PREFIJO[p.orden];
+    if (re) return n.replace(re, '');
+    if (p.orden >= 100 && p.seccion && norm(n).indexOf(norm(p.seccion) + ' ') === 0) return n.slice(String(p.seccion).length).trim();
+    return n;
+  }
+  function fotoDe(p) { return p.foto || FOTOS[p.cod] || ''; }
 
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function slug(t) { return String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
@@ -116,7 +127,9 @@ function filtrar() {
     d.style.display = hay ? '' : 'none';
     d.dataset.marcaCoincide = marcaCoincide ? '1' : '';
   });
-  Array.prototype.forEach.call(document.querySelectorAll('.prod-card'), function (t) {
+  var hab = document.getElementById('habituales');
+  if (hab) hab.style.display = activo ? 'none' : '';
+  Array.prototype.forEach.call(document.querySelectorAll('details.marca .prod-card'), function (t) {
     var marca = t.closest('details.marca');
     var okQ = !q || t.dataset.busca.indexOf(q.replace(/[^a-z0-9]+/g, '-')) !== -1 || norm(t.dataset.todos).indexOf(q) !== -1 ||
       (marca && marca.dataset.marcaCoincide === '1'); // "tucangua" muestra todo lo de esa marca
@@ -125,7 +138,7 @@ function filtrar() {
     if (ok) visibles++;
   });
   Array.prototype.forEach.call(document.querySelectorAll('.cat-seccion'), function (s) {
-    var hay = Array.prototype.some.call(s.querySelectorAll('.prod-card'), function (t) { return t.style.display !== 'none'; });
+    var hay = Array.prototype.some.call(s.querySelectorAll('details.marca .prod-card'), function (t) { return t.style.display !== 'none'; });
     s.style.display = !activo || hay ? '' : 'none';
   });
   Array.prototype.forEach.call(document.querySelectorAll('.sem-filtro'), function (b) {
@@ -196,10 +209,11 @@ function activarBuscador() {
   function tarjeta(g) {
     var p = g.variantes[0].p, info = SECCIONES[p.orden] || { icono: 'fa-basket-shopping' }, varias = g.variantes.length > 1;
     g.variantes.forEach(function (v) { grupoDe[v.p.cod] = g; });
-    var foto = g.variantes.map(function (v) { return FOTOS[v.p.cod]; }).filter(Boolean)[0];
+    var foto = g.variantes.map(function (v) { return fotoDe(v.p); }).filter(Boolean)[0];
     var media = foto
       ? '<img src="' + esc(foto) + '" alt="' + esc(g.base) + '" loading="lazy">'
       : '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>';
+    var visible = varias ? nombreCorto({ nombre: g.base, orden: p.orden, seccion: p.seccion }) : nombreCorto(p);
     var nombres = g.variantes.map(function (v) { return v.p.nombre; }).join(' ');
     var precios = g.variantes.map(function (v) { return v.p.precio; });
     var desde = Math.min.apply(null, precios), igual = precios.every(function (x) { return x === desde; });
@@ -212,17 +226,43 @@ function activarBuscador() {
       '" data-busca="' + esc(slug(nombres)) + '" data-todos="' + esc(nombres) +
       '" data-cambio="' + g.variantes.map(function (v) { return cambioDeProducto(v.p); }).join(' ') + '">' +
       '<div class="prod-foto' + (foto ? '' : ' sin-foto') + '">' + media + '</div><div class="prod-info">' +
-      '<div class="prod-nombre">' + esc(g.base) + '</div>' +
+      '<div class="prod-nombre">' + esc(visible) + '</div>' +
       '<div class="prod-precio">' + (varias && !igual ? '<small>desde</small> ' : '') + pesos(varias ? desde : p.precio) + '</div>' +
       cambioDe(g) + selector +
       // La cantidad se escribe con el teclado numérico del teléfono (24/11, Víctor: "sin tener que ir sumando de a uno");
       // lo que se vende por kilo trae la coma (0,5 kg de cera)
-      '<div class="prod-ctrl"><button type="button" data-d="-1" aria-label="Quitar uno">−</button>' +
-      '<input class="cant" type="text" inputmode="' + (porPeso(p.nombre) ? 'decimal' : 'numeric') + '"' + (porPeso(p.nombre) ? '' : ' pattern="[0-9]*"') +
-      ' value="" placeholder="0" autocomplete="off" enterkeyhint="done" aria-label="Cantidad de ' + esc(p.nombre) + '">' +
-      '<button type="button" data-d="1" aria-label="Agregar uno">+</button></div>' +
+      controles(p) +
       (varias ? '<div class="prod-lleva" aria-live="polite"></div>' : '') +
       '</div></article>';
+  }
+
+  // Con 0: un solo botón "Agregar"; con cantidad: − [cantidad] + (27/11, más fácil de tocar)
+  function controles(p) {
+    return '<div class="prod-ctrl"><button type="button" class="btn-agregar" data-d="1"><i class="fa-solid fa-plus" aria-hidden="true"></i> Agregar</button>' +
+      '<div class="stepper"><button type="button" data-d="-1" aria-label="Quitar uno">−</button>' +
+      '<input class="cant" type="text" inputmode="' + (porPeso(p.nombre) ? 'decimal' : 'numeric') + '"' + (porPeso(p.nombre) ? '' : ' pattern="[0-9]*"') +
+      ' value="" placeholder="0" autocomplete="off" enterkeyhint="done" aria-label="Cantidad de ' + esc(p.nombre) + '">' +
+      '<button type="button" data-d="1" aria-label="Agregar uno">+</button></div></div>';
+  }
+
+  // "Lo que sueles pedir" (27/11): los productos de sus últimos pedidos, con un botón para cargar las cantidades
+  // de la última vez. Arriba de todo, así el pedido de siempre se arma en dos toques.
+  function seccionHabituales() {
+    var porCod = {};
+    productos.forEach(function (p) { porCod[p.cod] = p; });
+    var lista = habituales.filter(function (h) { return porCod[h.cod]; });
+    if (!lista.length) return '';
+    var filas = lista.map(function (h) {
+      var p = porCod[h.cod], foto = fotoDe(p), info = SECCIONES[p.orden] || { icono: 'fa-basket-shopping' };
+      return '<article class="prod-card hab-fila" data-cod="' + esc(p.cod) + '" data-nombre="' + esc(p.nombre) + '" data-precio="' + (Number(p.precio) || 0) + '">' +
+        '<div class="hab-foto">' + (foto ? '<img src="' + esc(foto) + '" alt="" loading="lazy">' : '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>') + '</div>' +
+        '<div class="hab-info"><div class="prod-nombre">' + esc(p.nombre) + '</div>' +
+        '<div class="hab-precio">' + pesos(p.precio) + '</div>' + (h.cant > 0 ? '<div class="hab-ultima">Última vez: ' + numero(h.cant) + '</div>' : '') + '</div>' +
+        controles(p) + '</article>';
+    }).join('');
+    return '<section class="habituales" id="habituales"><div class="hab-cab"><h2>Lo que sueles pedir</h2>' +
+      '<button type="button" class="btn-repetir" id="repetir"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Pedir lo mismo que la última vez</button></div>' +
+      filas + '</section>';
   }
 
   // La lista es un índice de títulos que se tocan para abrir (26/11, Víctor: "si solo tenemos títulos con botones, de
@@ -254,10 +294,10 @@ function activarBuscador() {
   function titulo(o) {
     var m = marcas[o], info = SECCIONES[o], n = m.items.length, sem = semaforo(m.items);
     return '<details class="marca sem-' + sem.clase + (info ? ' propia' : '') + '" id="marca-' + o + '" data-orden="' + o + '"><summary>' +
-      (info ? '<i class="fa-solid ' + info.icono + '" aria-hidden="true"></i>' : '') +
+      (info ? '<span class="marca-ico"><i class="fa-solid ' + info.icono + '" aria-hidden="true"></i></span>' : '') +
       '<span class="marca-tit">' + esc(m.nombre) + (info ? '<small>' + esc(info.desc) + '</small>' : '') +
-      '<span class="sem-etiqueta">' + sem.texto + '</span></span>' +
-      '<span class="marca-cant">' + n + (n === 1 ? ' producto' : ' productos') + '</span></summary><div class="marca-cuerpo"></div></details>';
+      '<span class="marca-pie"><span class="sem-etiqueta">' + sem.texto + '</span><span class="marca-cant">' + n + (n === 1 ? ' producto' : ' productos') + '</span></span></span>' +
+      '<i class="fa-solid fa-chevron-down marca-flecha" aria-hidden="true"></i></summary><div class="marca-cuerpo"></div></details>';
   }
   var filtrosHtml = '';
   function dibujar() {
@@ -277,7 +317,7 @@ function activarBuscador() {
         (nSube ? '<button type="button" class="sem-filtro" data-f="sube" aria-pressed="false"><span class="sem-dot sube"></span>Subieron (' + nSube + ')</button>' : '') +
         (nBaja ? '<button type="button" class="sem-filtro" data-f="baja" aria-pressed="false"><span class="sem-dot baja"></span>Bajaron (' + nBaja + ')</button>' : '')
       : '';
-    var html = '<div class="sem-leyenda"><span class="sem-ref"><span class="sem-dot sube"></span>Subió</span>' +
+    var html = seccionHabituales() + '<div class="sem-leyenda"><span class="sem-ref"><span class="sem-dot sube"></span>Subió</span>' +
       '<span class="sem-ref"><span class="sem-dot baja"></span>Bajó</span><span class="sem-ref"><span class="sem-dot igual"></span>Sin cambios</span>' +
       '<small>Según la última lista de cada marca.</small></div>' +
       '<section class="cat-seccion" id="nuestros"><h2><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Nuestros productos</h2>' +
@@ -309,11 +349,13 @@ function activarBuscador() {
       // El casillero que se está escribiendo no se pisa (si no, se borraría la coma a medio escribir)
       if (campo !== document.activeElement) campo.value = c > 0 ? numero(c) : '';
       var g = grupoDe[t.dataset.cod], lleva = [];
-      if (g && g.variantes.length > 1) {
+      if (g && g.variantes.length > 1 && t.querySelector('.prod-lleva')) {
         g.variantes.forEach(function (v) { var n = cantidades[v.p.cod] || 0; if (n > 0) lleva.push(numero(n) + ' × ' + v.pres); });
         t.querySelector('.prod-lleva').textContent = lleva.length ? 'En tu pedido: ' + lleva.join(' · ') : '';
       }
       t.classList.toggle('en-pedido', c > 0 || lleva.length > 0);
+      // Con cantidad (o escribiendo en el casillero): − [n] +; si no, el botón "Agregar"
+      t.classList.toggle('con-cant', c > 0 || campo === document.activeElement);
     });
     // El pedido, en el orden de la lista (una línea por presentación)
     productos.forEach(function (p) {
@@ -326,7 +368,8 @@ function activarBuscador() {
     });
     var barra = document.getElementById('barra');
     barra.classList.toggle('visible', unidades > 0);
-    document.getElementById('resumen').textContent = unidades + (unidades === 1 ? ' producto' : ' productos') + ' · ' + pesos(total);
+    document.getElementById('resumen-cant').textContent = unidades + (unidades === 1 ? ' producto' : ' productos');
+    document.getElementById('resumen').textContent = pesos(total);
     // El pedido como una orden de compra (24/11, Víctor): cantidad, producto, precio, subtotal y total, en la pantalla y en el WhatsApp
     var texto = 'Hola Víctor! ' + (cliente ? 'Soy de ' + cliente + '. ' : '') + 'Te paso mi pedido:\n' + lineas.join('\n') +
       (total ? '\n\nTotal aproximado: ' + pesos(total) : '');
@@ -342,6 +385,13 @@ function activarBuscador() {
     if (e.target.matches && e.target.matches('details.marca') && e.target.open) dibujarMarca(e.target.dataset.orden);
   }, true);
   document.querySelector('main').addEventListener('click', function (e) {
+    if (e.target.closest('#repetir')) {
+      habituales.forEach(function (h) { if (h.cant > 0) cantidades[h.cod] = h.cant; });
+      pintar();
+      var r = document.getElementById('repetir');
+      r.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> Listo: cargamos lo de la última vez';
+      return;
+    }
     var b = e.target.closest('button[data-d]');
     if (!b) return;
     var cod = b.closest('.prod-card').dataset.cod;
@@ -358,7 +408,7 @@ function activarBuscador() {
     t.querySelector('.prod-precio').textContent = pesos(v.p.precio);
     var campo = t.querySelector('.cant');
     campo.setAttribute('aria-label', 'Cantidad de ' + v.p.nombre);
-    var f = FOTOS[v.p.cod], img = t.querySelector('.prod-foto img');
+    var f = fotoDe(v.p), img = t.querySelector('.prod-foto img');
     if (f && img) img.src = f;
     pintar();
   });
@@ -376,7 +426,7 @@ function activarBuscador() {
   document.querySelector('main').addEventListener('focusout', function (e) { if (e.target.closest('input.cant')) setTimeout(pintar, 0); });
   // Al tocarlo se selecciona lo que había, así se escribe el número nuevo directo
   document.querySelector('main').addEventListener('focusin', function (e) { var c = e.target.closest('input.cant'); if (c) setTimeout(function () { c.select(); }, 0); });
-  document.getElementById('vaciar').addEventListener('click', function () { cantidades = {}; pintar(); });
+  document.getElementById('vaciar').addEventListener('click', function () { cantidades = {}; pintar(); revisar.hidden = true; });
   // Enviar pedido → primero se revisa. Un toque que llega justo cuando la barra aparece (el dedo iba al + de abajo) no cuenta.
   var barraDesde = 0, revisar = document.getElementById('revisar');
   document.getElementById('enviar').addEventListener('click', function () {
@@ -420,7 +470,9 @@ function activarBuscador() {
       }
       cliente = res.d.cliente || '';
       productos = res.d.productos || [];
-      document.getElementById('saludo').textContent = (cliente ? 'Hola, ' + cliente + '. ' : '') + 'Sumá lo que necesitás y mandanos el pedido por WhatsApp.';
+      habituales = res.d.habituales || [];
+      if (cliente) document.getElementById('hola').textContent = 'Hola, ' + cliente;
+      document.getElementById('saludo').textContent = 'Elegí lo que necesitás y mandanos el pedido por WhatsApp.';
       var nota = document.getElementById('nota');
       var f = res.d.actualizado ? res.d.actualizado.split('-').reverse().join('/') : null;
       nota.textContent = 'Precios en pesos argentinos' + (f ? ', actualizados al ' + f : '') + '.';

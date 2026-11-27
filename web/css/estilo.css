@@ -221,3 +221,97 @@ body.escribiendo .barra-pedido{display:none}
 .sem-ref{display:inline-flex;align-items:center;gap:.35rem;font-size:.85rem;margin-left:.2rem}
 .sem-ref .sem-dot{margin-left:0}
 .sem-leyenda small{flex-basis:100%;margin-top:.1rem}
+
+/* =====================================================================
+   LISTA DE PRECIOS DEL CLIENTE (27/11): más compacta en el celular, tarjetas parejas, "Agregar" de un toque
+   y "Lo que sueles pedir". Todo dentro de body.pg-lista para no tocar el catálogo público.
+   ===================================================================== */
+.pg-lista{background:#f6f3ec}
+.pg-lista .lista-top{position:static;display:flex;align-items:center;justify-content:space-between;padding:.6rem 4%;background:var(--white);box-shadow:none;border-bottom:1px solid #ece6da}
+.pg-lista .lista-marca{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--primary);font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem}
+.pg-lista .lista-marca img{width:38px;height:38px;border-radius:50%;border:2px solid var(--primary)}
+.pg-lista .lista-etiqueta{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary)}
+.pg-lista .lista-hero{background:var(--primary);color:#fff;padding:1.15rem 4% 1.25rem}
+.pg-lista .lista-hero h1{color:#fff;font-size:1.65rem;line-height:1.2;margin-bottom:.25rem}
+.pg-lista .lista-hero p{font-size:.9rem;font-weight:300;color:#e3e8df;margin:0}
+.pg-lista .cat-barra{top:0;padding:.55rem 4% .5rem;box-shadow:0 3px 10px rgba(0,0,0,.07)}
+.pg-lista .cat-barra-in{gap:.45rem}
+.pg-lista .buscador-caja{position:relative;display:block}
+.pg-lista .buscador-caja i{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:#9a917f;font-size:.9rem;pointer-events:none}
+.pg-lista .buscador{padding:.6rem .9rem .6rem 2.3rem;border-radius:22px;font-size:.95rem;border:1.5px solid #e6dfd1;background:#faf8f3}
+.pg-lista .chips{gap:.4rem}
+.pg-lista .sem-filtro{font-size:.78rem;padding:.25rem .7rem}
+.pg-lista .cat{padding:.6rem 4% 7.5rem}
+.pg-lista .cat-seccion{padding-top:1.1rem}
+.pg-lista .cat-seccion h2{font-size:1.35rem}
+.pg-lista .cat-seccion h2 i{font-size:1.1rem}
+.pg-lista .cat-seccion>p{font-size:.85rem;color:#6b6457;margin-bottom:.4rem}
+.pg-lista .sem-leyenda{margin:.9rem 0 0;font-size:.78rem}
+
+/* Títulos de marca: ícono en círculo, una línea de descripción, semáforo y cantidad abajo */
+.pg-lista .marca{border-radius:14px;margin:.5rem 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.pg-lista .marca summary{padding:.75rem .85rem;gap:.7rem}
+.pg-lista .marca summary::after{content:none}
+.pg-lista .marca-ico{flex:0 0 2.5rem;height:2.5rem;border-radius:50%;background:#f3ede1;display:flex;align-items:center;justify-content:center}
+.pg-lista .marca-ico i{color:var(--primary);font-size:1.05rem}
+.pg-lista .marca-tit{min-width:0;font-size:1rem;line-height:1.25}
+.pg-lista .marca.propia .marca-tit{font-size:1.02rem}
+.pg-lista .marca-tit small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.78rem;margin-top:.1rem}
+.pg-lista .marca-pie{display:flex;align-items:center;gap:.5rem;margin-top:.35rem}
+.pg-lista .marca-tit .sem-etiqueta{display:inline-block;margin:0;font-size:.68rem}
+.pg-lista .marca-cant{font-size:.74rem;font-weight:500}
+.pg-lista .marca-flecha{color:var(--primary);font-size:.85rem;transition:transform .2s}
+.pg-lista .marca[open] .marca-flecha{transform:rotate(180deg)}
+.pg-lista .marca-cuerpo{padding:.2rem .6rem .8rem}
+
+/* Tarjetas de producto: todas con el mismo alto de foto (o un fondo con el ícono si todavía no tiene) */
+.pg-lista .cat-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.65rem;margin-top:.6rem}
+.pg-lista .prod-card{border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #efe9dd;transition:border-color .15s,box-shadow .15s}
+.pg-lista .prod-foto,.pg-lista .prod-foto.sin-foto{height:auto;aspect-ratio:4/3;font-size:2rem}
+.pg-lista .prod-foto{position:relative;overflow:hidden}
+.pg-lista .prod-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pg-lista .prod-foto.sin-foto{background:linear-gradient(135deg,#f3ede1,#ebe3d2);color:#c9b48f}
+.pg-lista .prod-info{padding:.65rem .7rem .7rem;gap:.3rem}
+.pg-lista .prod-nombre{font-size:.86rem;font-weight:600;line-height:1.3}
+.pg-lista .prod-precio{font-family:'Poppins',sans-serif;font-size:1.12rem;font-weight:700;color:var(--primary)}
+.pg-lista .prod-cambio{margin:0}
+.pg-lista .prod-var{margin:.1rem 0 .2rem}
+.pg-lista .prod-card.en-pedido{outline:0;border-color:var(--secondary);box-shadow:0 0 0 2px var(--secondary)}
+
+/* "Agregar" con 0; − [n] + con cantidad */
+.pg-lista .prod-ctrl{display:block;margin-top:.15rem}
+.pg-lista .btn-agregar{width:100%;height:38px;border-radius:19px;border:1.5px solid var(--primary);background:#fff;color:var(--primary);font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.pg-lista .btn-agregar:active{background:var(--primary);color:#fff}
+.pg-lista .stepper{display:none;align-items:center;justify-content:space-between;gap:.3rem;background:var(--primary);border-radius:19px;height:38px;padding:0 .2rem}
+.pg-lista .con-cant .btn-agregar{display:none}
+.pg-lista .con-cant .stepper{display:flex}
+.pg-lista .stepper button{width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;line-height:1}
+.pg-lista .stepper button:active{background:#ffffff26}
+.pg-lista .stepper .cant{flex:1;min-width:0;width:auto;height:30px;border:0;border-radius:8px;background:#ffffff1f;color:#fff;font-weight:700;font-size:1rem;text-align:center}
+.pg-lista .stepper .cant:focus{outline:2px solid #fff6}
+.pg-lista .stepper .cant::placeholder{color:#ffffff99}
+
+/* Lo que sueles pedir */
+.pg-lista .habituales{background:#fff;border-radius:14px;margin-top:.9rem;padding:.85rem .8rem .3rem;border-top:4px solid var(--secondary);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.pg-lista .hab-cab{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.4rem}
+.pg-lista .hab-cab h2{font-size:1.25rem;margin:0}
+.pg-lista .btn-repetir{align-self:stretch;background:var(--secondary);color:#fff;border:0;border-radius:22px;font:inherit;font-weight:600;font-size:.9rem;padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.pg-lista .hab-fila{display:grid;grid-template-columns:48px 1fr 112px;align-items:center;gap:.6rem;padding:.55rem 0;border:0;border-bottom:1px solid #f0ebe1;border-radius:0;box-shadow:none;flex-direction:row}
+.pg-lista .hab-fila:last-child{border-bottom:0}
+.pg-lista .hab-fila.en-pedido{box-shadow:none;border-color:#f0ebe1}
+.pg-lista .hab-foto{width:48px;height:48px;border-radius:10px;overflow:hidden;background:#f3ede1;display:flex;align-items:center;justify-content:center;color:#c9b48f}
+.pg-lista .hab-foto img{width:100%;height:100%;object-fit:cover}
+.pg-lista .hab-info{min-width:0}
+.pg-lista .hab-info .prod-nombre{font-size:.82rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pg-lista .hab-precio{font-size:.8rem;font-weight:700;color:var(--primary)}
+.pg-lista .hab-ultima{font-size:.74rem;color:#8a8273;line-height:1.2}
+.pg-lista .hab-fila .btn-agregar,.pg-lista .hab-fila .stepper{height:34px}
+
+/* Barra del pedido: flotante, con el total grande */
+.pg-lista .barra-pedido{left:3%;right:3%;bottom:.7rem;border-radius:16px;padding:.55rem .6rem .55rem 1rem;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.pg-lista .barra-pedido .resumen{display:flex;flex-direction:column;line-height:1.15}
+.pg-lista .resumen-cant{font-size:.75rem;font-weight:400;color:#dfe6da}
+.pg-lista .barra-pedido .resumen b{font-size:1.15rem}
+.pg-lista .barra-pedido .btn-wsp{border-radius:12px;padding:.7rem 1rem;background:#25D366}
+.pg-lista .revisar-caja .btn-vaciar{background:none;border:0;color:#b3302c;font:inherit;font-size:.85rem;padding:.3rem;cursor:pointer;text-decoration:underline}
+@media (min-width:700px){.pg-lista .barra-pedido{left:50%;right:auto;transform:translateX(-50%);width:min(560px,94%)}}
